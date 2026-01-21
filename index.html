@@ -163,14 +163,15 @@
       </div>
     </section><!-- /Hero Section -->
 
-    <!-- Collecte Section -->
     <section id="map-section" class="about section">
 
       <div class="container section-title" data-aos="fade-up">
         <span class="description-title">Carte Interactive</span>
         <h2>Les Spots de Collecte</h2>
-        <p>Repérez les zones d'intervention en cours et les événements planifiés autour de la rade.</p>
-      </div><div class="container" data-aos="fade-up" data-aos-delay="100">
+        <p>Cliquez sur un événement dans la liste pour le localiser sur la carte.</p>
+      </div>
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
 
         <div class="row gx-0 gx-lg-5 gy-5 align-items-center">
           
@@ -178,18 +179,10 @@
             <div class="image-wrapper">
               
               <div class="image-box">
-                <iframe 
-                  src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d21187.50974864746!2d-4.486076!3d48.390394!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sfr!2sfr!4v1700000000000!5m2!1sfr!2sfr" 
-                  width="100%" 
-                  height="100%" 
-                  style="border:0; min-height: 500px; display: block;" 
-                  allowfullscreen="" 
-                  loading="lazy" 
-                  referrerpolicy="no-referrer-when-downgrade">
-                </iframe>
+                <div id="map" style="width: 100%; height: 500px; border-radius: 10px; z-index: 1;"></div>
               </div>
               
-              <div class="experience-box" data-aos="zoom-in" data-aos-delay="300">
+              <div class="experience-box" style="z-index: 1000;">
                 <div class="years">8</div> 
                 <div class="text">Actions<br>En cours</div>
               </div>
@@ -203,13 +196,12 @@
                 <h2>Prochains Ramassages</h2>
               </div>
 
-              <p class="highlight-text">Rejoignez une équipe ! Sélectionnez un événement ci-dessous pour voir les détails et le point de rendez-vous sur la carte.</p>
+              <p class="highlight-text">Sélectionnez un événement ci-dessous pour voir le point de rendez-vous sur la carte.</p>
 
               <div class="features-list" style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
                 
-                <div class="feature-item" data-aos="zoom-in" data-aos-delay="300">
-                  <div class="icon-box">
-                    <i class="bi bi-calendar-event"></i> </div>
+                <div class="feature-item cursor-pointer" onclick="focusMap(48.3908, -4.4357, 'Plage du Moulin Blanc')">
+                  <div class="icon-box"><i class="bi bi-calendar-event"></i></div>
                   <div class="text">
                     <h4>Plage du Moulin Blanc</h4>
                     <p><strong>Demain, 14h00</strong> - Org: EcoBreizh<br>
@@ -217,9 +209,8 @@
                   </div>
                 </div>
 
-                <div class="feature-item" data-aos="zoom-in" data-aos-delay="400">
-                  <div class="icon-box">
-                    <i class="bi bi-exclamation-triangle"></i> </div>
+                <div class="feature-item cursor-pointer" onclick="focusMap(48.3394, -4.6122, 'Pointe du Petit Minou')">
+                  <div class="icon-box"><i class="bi bi-exclamation-triangle"></i></div>
                   <div class="text">
                     <h4>Pointe du Petit Minou</h4>
                     <p><strong>Samedi, 10h00</strong> - Org: Surfrider 29<br>
@@ -227,9 +218,8 @@
                   </div>
                 </div>
 
-                <div class="feature-item" data-aos="zoom-in" data-aos-delay="500">
-                  <div class="icon-box">
-                    <i class="bi bi-geo-alt"></i> </div>
+                <div class="feature-item cursor-pointer" onclick="focusMap(48.3765, -4.3640, 'Port de Plougastel')">
+                  <div class="icon-box"><i class="bi bi-geo-alt"></i></div>
                   <div class="text">
                     <h4>Port de Plougastel</h4>
                     <p><strong>Dimanche, 09h30</strong> - Org: Mairie<br>
@@ -237,10 +227,8 @@
                   </div>
                 </div>
 
-                <div class="feature-item">
-                  <div class="icon-box">
-                    <i class="bi bi-water"></i>
-                  </div>
+                <div class="feature-item cursor-pointer" onclick="focusMap(48.2754, -4.5977, 'Anse de Camaret')">
+                  <div class="icon-box"><i class="bi bi-water"></i></div>
                   <div class="text">
                     <h4>Anse de Camaret</h4>
                     <p><strong>25 Jan, 14h00</strong> - Org: Lycée Naval<br>
@@ -248,10 +236,8 @@
                   </div>
                 </div>
 
-                 <div class="feature-item">
-                  <div class="icon-box">
-                    <i class="bi bi-calendar-check"></i>
-                  </div>
+                <div class="feature-item cursor-pointer" onclick="focusMap(48.3585, -4.5705, 'Technopôle Brest-Iroise')">
+                  <div class="icon-box"><i class="bi bi-calendar-check"></i></div>
                   <div class="text">
                     <h4>Plouzané - Technopôle</h4>
                     <p><strong>26 Jan, 17h00</strong> - Org: BDE ENIB<br>
@@ -269,8 +255,7 @@
         </div>
 
       </div>
-
-    </section><!-- /About Section -->
+    </section>
 
     <!-- Services Section -->
     <section id="map-section" class="about section">
@@ -1385,64 +1370,42 @@
   <script src="assets/js/main.js"></script>
 
   <script>
-    // On attend que tout le HTML soit chargé avant de lancer la carte
     document.addEventListener("DOMContentLoaded", function() {
+        // 1. Initialisation
+        var map = L.map('map').setView([48.35, -4.48], 11);
 
-        // Vérification de sécurité : est-ce que la boite 'map' existe ?
-        var mapElement = document.getElementById('map');
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // 2. Les points (Marqueurs bleus)
+        var locations = [
+            { lat: 48.3908, lng: -4.4357, title: "Plage du Moulin Blanc" },
+            { lat: 48.3394, lng: -4.6122, title: "Pointe du Petit Minou" },
+            { lat: 48.3765, lng: -4.3640, title: "Port de Plougastel" },
+            { lat: 48.2754, lng: -4.5977, title: "Anse de Camaret" },
+            { lat: 48.3585, lng: -4.5705, title: "Technopôle Brest-Iroise" }
+        ];
+
+        locations.forEach(function(loc) {
+            L.marker([loc.lat, loc.lng]).addTo(map)
+            .bindPopup("<b>" + loc.title + "</b><br>Rendez-vous ici !");
+        });
+
+        // 3. La fonction de zoom au clic
+        window.focusMap = function(lat, lng, title) {
+            map.flyTo([lat, lng], 14, { animate: true, duration: 1.5 });
+            L.popup().setLatLng([lat, lng]).setContent("<b>" + title + "</b>").openOn(map);
+        };
         
-        if (mapElement) {
-            // 1. Création de la carte
-            var map = L.map('map').setView([48.35, -4.48], 11);
-
-            // 2. Ajout des tuiles (le fond de carte)
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap contributors'
-            }).addTo(map);
-
-            // 3. Les points
-            var locations = [
-                { lat: 48.3908, lng: -4.4357, title: "Plage du Moulin Blanc" },
-                { lat: 48.3394, lng: -4.6122, title: "Pointe du Petit Minou" },
-                { lat: 48.3765, lng: -4.3640, title: "Port de Plougastel" },
-                { lat: 48.2754, lng: -4.5977, title: "Anse de Camaret" }
-            ];
-
-            locations.forEach(function(loc) {
-                L.marker([loc.lat, loc.lng])
-                .addTo(map)
-                .bindPopup("<b>" + loc.title + "</b><br>Rendez-vous ici !");
-            });
-
-            // 4. Rendre la fonction accessible globalement pour les clics
-            window.focusMap = function(lat, lng, title) {
-                map.flyTo([lat, lng], 14, {
-                    animate: true,
-                    duration: 1.5
-                });
-                L.popup()
-                  .setLatLng([lat, lng])
-                  .setContent("<b>" + title + "</b>")
-                  .openOn(map);
-            };
-            
-            // Force la carte à recalculer sa taille (fix pour les onglets/accords)
-            setTimeout(function(){ map.invalidateSize(); }, 500);
-        } else {
-            console.error("Erreur : La div avec l'id 'map' est introuvable !");
-        }
+        // Petit fix pour l'affichage
+        setTimeout(function(){ map.invalidateSize(); }, 500);
     });
   </script>
+
   <style>
-    /* Petit style pour montrer que les éléments de la liste sont cliquables */
-    .cursor-pointer {
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    .cursor-pointer:hover {
-      background-color: #f0f9ff; /* Un bleu très clair au survol */
-      border-radius: 8px;
-    }
+    .cursor-pointer { cursor: pointer; transition: 0.3s; }
+    .cursor-pointer:hover { background-color: #f0f8ff; }
   </style>
 
 </body>
