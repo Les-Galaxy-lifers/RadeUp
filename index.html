@@ -1385,43 +1385,53 @@
   <script src="assets/js/main.js"></script>
 
   <script>
-    // 1. Initialisation de la carte centrée sur la Rade de Brest
-    var map = L.map('map').setView([48.35, -4.48], 11); // Coordonnées globales de la rade
+    // On attend que tout le HTML soit chargé avant de lancer la carte
+    document.addEventListener("DOMContentLoaded", function() {
 
-    // 2. Ajout du fond de carte (OpenStreetMap - Gratuit)
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-    // 3. Création des marqueurs personnalisés
-    // On définit la liste des points ici aussi pour qu'ils s'affichent au chargement
-    var locations = [
-        { lat: 48.3908, lng: -4.4357, title: "Plage du Moulin Blanc" },
-        { lat: 48.3394, lng: -4.6122, title: "Pointe du Petit Minou" },
-        { lat: 48.3765, lng: -4.3640, title: "Port de Plougastel" },
-        { lat: 48.2754, lng: -4.5977, title: "Anse de Camaret" }
-    ];
-
-    // Boucle pour afficher tous les points
-    locations.forEach(function(loc) {
-        L.marker([loc.lat, loc.lng])
-        .addTo(map)
-        .bindPopup("<b>" + loc.title + "</b><br>Rendez-vous ici !");
-    });
-
-    // 4. Fonction pour zoomer quand on clique sur la liste
-    function focusMap(lat, lng, title) {
-        map.flyTo([lat, lng], 14, { // 14 est le niveau de zoom
-            animate: true,
-            duration: 1.5
-        });
+        // Vérification de sécurité : est-ce que la boite 'map' existe ?
+        var mapElement = document.getElementById('map');
         
-        // Petit bonus : ouvre une bulle au dessus du point
-        L.popup()
-          .setLatLng([lat, lng])
-          .setContent("<b>" + title + "</b>")
-          .openOn(map);
-    }
+        if (mapElement) {
+            // 1. Création de la carte
+            var map = L.map('map').setView([48.35, -4.48], 11);
+
+            // 2. Ajout des tuiles (le fond de carte)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            // 3. Les points
+            var locations = [
+                { lat: 48.3908, lng: -4.4357, title: "Plage du Moulin Blanc" },
+                { lat: 48.3394, lng: -4.6122, title: "Pointe du Petit Minou" },
+                { lat: 48.3765, lng: -4.3640, title: "Port de Plougastel" },
+                { lat: 48.2754, lng: -4.5977, title: "Anse de Camaret" }
+            ];
+
+            locations.forEach(function(loc) {
+                L.marker([loc.lat, loc.lng])
+                .addTo(map)
+                .bindPopup("<b>" + loc.title + "</b><br>Rendez-vous ici !");
+            });
+
+            // 4. Rendre la fonction accessible globalement pour les clics
+            window.focusMap = function(lat, lng, title) {
+                map.flyTo([lat, lng], 14, {
+                    animate: true,
+                    duration: 1.5
+                });
+                L.popup()
+                  .setLatLng([lat, lng])
+                  .setContent("<b>" + title + "</b>")
+                  .openOn(map);
+            };
+            
+            // Force la carte à recalculer sa taille (fix pour les onglets/accords)
+            setTimeout(function(){ map.invalidateSize(); }, 500);
+        } else {
+            console.error("Erreur : La div avec l'id 'map' est introuvable !");
+        }
+    });
   </script>
   <style>
     /* Petit style pour montrer que les éléments de la liste sont cliquables */
