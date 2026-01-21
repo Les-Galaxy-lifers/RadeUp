@@ -27,6 +27,9 @@
   <!-- Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
 
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
   <!-- =======================================================
   * Template Name: Nexa
   * Template URL: https://bootstrapmade.com/nexa-bootstrap-agency-template/
@@ -160,7 +163,7 @@
       </div>
     </section><!-- /Hero Section -->
 
-    <!-- About Section -->
+    <!-- Collecte Section -->
     <section id="map-section" class="about section">
 
       <div class="container section-title" data-aos="fade-up">
@@ -270,113 +273,82 @@
     </section><!-- /About Section -->
 
     <!-- Services Section -->
-    <section id="services" class="services section">
+    <section id="map-section" class="about section">
 
-      <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <span class="description-title">Services</span>
-        <h2>Services</h2>
-        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
-      </div><!-- End Section Title -->
+        <span class="description-title">Carte Interactive</span>
+        <h2>Les Spots de Collecte</h2>
+        <p>Cliquez sur un événement pour le localiser sur la Rade de Brest.</p>
+      </div>
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
 
-        <div class="services-container">
-          <div class="row g-4">
-            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-              <div class="service-item">
-                <div class="service-icon">
-                  <i class="bi bi-code-slash"></i>
-                </div>
-                <div class="service-content">
-                  <span class="service-number">01</span>
-                  <h3 class="service-title">Custom Application Development</h3>
-                  <p class="service-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla condimentum tortor sem, in semper nisl bibendum eu. Duis pellentesque.</p>
-                  <a href="#" class="service-link">
-                    Learn More
-                    <i class="bi bi-arrow-right"></i>
-                  </a>
-                </div>
+        <div class="row gx-0 gx-lg-5 gy-5 align-items-center">
+          
+          <div class="col-lg-6" data-aos="zoom-out" data-aos-delay="200">
+            <div class="image-wrapper">
+              
+              <div class="image-box">
+                <div id="map" style="width: 100%; height: 500px; border-radius: 10px; z-index: 1;"></div>
               </div>
-            </div>
-
-            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-              <div class="service-item">
-                <div class="service-icon">
-                  <i class="bi bi-bar-chart"></i>
-                </div>
-                <div class="service-content">
-                  <span class="service-number">02</span>
-                  <h3 class="service-title">Strategic Business Planning</h3>
-                  <p class="service-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla condimentum tortor sem, in semper nisl bibendum eu. Duis pellentesque.</p>
-                  <a href="#" class="service-link">
-                    Learn More
-                    <i class="bi bi-arrow-right"></i>
-                  </a>
-                </div>
+              
+              <div class="experience-box" style="z-index: 1000;"> <div class="years">8</div> 
+                <div class="text">Actions<br>En cours</div>
               </div>
+              
             </div>
+          </div>
 
-            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
-              <div class="service-item">
-                <div class="service-icon">
-                  <i class="bi bi-palette"></i>
-                </div>
-                <div class="service-content">
-                  <span class="service-number">03</span>
-                  <h3 class="service-title">Brand &amp; Identity Design</h3>
-                  <p class="service-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla condimentum tortor sem, in semper nisl bibendum eu. Duis pellentesque.</p>
-                  <a href="#" class="service-link">
-                    Learn More
-                    <i class="bi bi-arrow-right"></i>
-                  </a>
-                </div>
+          <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
+            <div class="content">
+              <div class="section-header">
+                <h2>Prochains Ramassages</h2>
               </div>
-            </div>
+              <p>Sélectionnez un lieu pour zoomer dessus.</p>
 
-            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="400">
-              <div class="service-item">
-                <div class="service-icon">
-                  <i class="bi bi-megaphone"></i>
+              <div class="features-list" style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
+                
+                <div class="feature-item cursor-pointer" onclick="focusMap(48.3908, -4.4357, 'Plage du Moulin Blanc')">
+                  <div class="icon-box"><i class="bi bi-calendar-event"></i></div>
+                  <div class="text">
+                    <h4>Plage du Moulin Blanc</h4>
+                    <p><strong>Demain, 14h00</strong> - Org: EcoBreizh<br>
+                    <span class="badge bg-primary">Nettoyage</span></p>
+                  </div>
                 </div>
-                <div class="service-content">
-                  <span class="service-number">04</span>
-                  <h3 class="service-title">Digital Marketing &amp; SEO</h3>
-                  <p class="service-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla condimentum tortor sem, in semper nisl bibendum eu. Duis pellentesque.</p>
-                  <a href="#" class="service-link">
-                    Learn More
-                    <i class="bi bi-arrow-right"></i>
-                  </a>
+
+                <div class="feature-item cursor-pointer" onclick="focusMap(48.3394, -4.6122, 'Pointe du Petit Minou')">
+                  <div class="icon-box"><i class="bi bi-exclamation-triangle"></i></div>
+                  <div class="text">
+                    <h4>Pointe du Petit Minou</h4>
+                    <p><strong>Samedi, 10h00</strong> - Org: Surfrider 29<br>
+                    <span class="badge bg-warning text-dark">Urgent</span></p>
+                  </div>
                 </div>
+
+                <div class="feature-item cursor-pointer" onclick="focusMap(48.3765, -4.3640, 'Port de Plougastel')">
+                  <div class="icon-box"><i class="bi bi-geo-alt"></i></div>
+                  <div class="text">
+                    <h4>Port de Plougastel</h4>
+                    <p><strong>Dimanche, 09h30</strong> - Org: Mairie<br>
+                    <span class="badge bg-success">Tri sélectif</span></p>
+                  </div>
+                </div>
+
+                 <div class="feature-item cursor-pointer" onclick="focusMap(48.2754, -4.5977, 'Anse de Camaret')">
+                  <div class="icon-box"><i class="bi bi-water"></i></div>
+                  <div class="text">
+                    <h4>Anse de Camaret</h4>
+                    <p><strong>25 Jan, 14h00</strong> - Org: Lycée Naval</p>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
         </div>
-
-        <div class="cta-wrapper mt-5 text-center" data-aos="fade-up" data-aos-delay="100">
-          <div class="row">
-            <div class="col-lg-8 offset-lg-2">
-              <div class="cta-box">
-                <div class="row align-items-center">
-                  <div class="col-lg-4">
-                    <div class="cta-image" data-aos="zoom-in" data-aos-delay="200">
-                      <img src="assets/img/services/services-8.webp" alt="Services" class="img-fluid rounded-circle">
-                    </div>
-                  </div>
-                  <div class="col-lg-8">
-                    <div class="cta-content text-lg-start" data-aos="fade-left" data-aos-delay="300">
-                      <h3>Need a Custom Solution?</h3>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis.</p>
-                      <a href="#" class="primary-btn">Schedule a Consultation</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
       </div>
+    </section><!-- /Services Collecte -->
 
     </section><!-- /Services Section -->
 
