@@ -248,7 +248,7 @@
 
               </div>
               <div class="cta-buttons">
-                <a href="#contact" class="btn-learn-more">Proposer un lieu</a>
+                <a href="#steps" class="btn-learn-more">Proposer un lieu</a>
                 <a href="#" class="btn-get-started">M'inscrire</a>
               </div>
             </div>
@@ -259,15 +259,12 @@
     </section><!-- Map Section -->
 
 
-    <!-- Steps Section -->
     <section id="steps" class="steps section">
-
-      <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <span class="description-title">Steps</span>
-        <h2>Steps</h2>
-        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
-      </div><!-- End Section Title -->
+        <span class="description-title">Contribuer</span>
+        <h2>Proposer un Spot</h2>
+        <p>Vous avez repéré une zone polluée ? Ajoutez-la à la carte en 4 étapes simples.</p>
+      </div>
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
 
@@ -279,60 +276,79 @@
                 <span class="step-number">01</span>
                 <div class="card-body">
                   <div class="step-icon">
-                    <i class="bi bi-pencil-square"></i>
+                    <i class="bi bi-tag"></i>
                   </div>
                   <div class="step-content">
-                    <h3>Project Planning</h3>
-                    <p>Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim.</p>
+                    <h3>Nom du Spot</h3>
+                    <div class="mb-3">
+                      <input type="text" class="form-control" id="inputName" placeholder="Ex: Plage des Blancs Sablons">
+                    </div>
                   </div>
                 </div>
               </div>
-            </div><!-- End Process Item -->
+            </div>
 
             <div class="process-item" data-aos="fade-up" data-aos-delay="300">
               <div class="content">
                 <span class="step-number">02</span>
                 <div class="card-body">
                   <div class="step-icon">
-                    <i class="bi bi-gear"></i>
+                    <i class="bi bi-geo"></i>
                   </div>
                   <div class="step-content">
-                    <h3>Development Phase</h3>
-                    <p>Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus.</p>
+                    <h3>Coordonnées GPS</h3>
+                    <div class="row g-2">
+                      <div class="col-6">
+                        <input type="number" step="any" class="form-control" id="inputLat" placeholder="Lat (Ex: 48.35)">
+                      </div>
+                      <div class="col-6">
+                        <input type="number" step="any" class="form-control" id="inputLng" placeholder="Lng (Ex: -4.70)">
+                      </div>
+                    </div>
+                    <small class="text-muted" style="font-size: 0.8em;">Astuce: Cliquez sur Google Maps pour avoir les chiffres.</small>
                   </div>
                 </div>
               </div>
-            </div><!-- End Process Item -->
+            </div>
 
             <div class="process-item" data-aos="fade-up" data-aos-delay="400">
               <div class="content">
                 <span class="step-number">03</span>
                 <div class="card-body">
                   <div class="step-icon">
-                    <i class="bi bi-search"></i>
+                    <i class="bi bi-exclamation-circle"></i>
                   </div>
                   <div class="step-content">
-                    <h3>Testing &amp; QA</h3>
-                    <p>Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero.</p>
+                    <h3>Type & Urgence</h3>
+                    <select class="form-select" id="inputType">
+                      <option selected>Sélectionner...</option>
+                      <option value="Plastique">Plastique & Filets</option>
+                      <option value="Verre">Verre & Débris</option>
+                      <option value="Tout venant">Tout venant (Gros volume)</option>
+                      <option value="Urgence">🚨 URGENCE MARÉE NOIRE</option>
+                    </select>
                   </div>
                 </div>
               </div>
-            </div><!-- End Process Item -->
+            </div>
 
             <div class="process-item" data-aos="fade-up" data-aos-delay="500">
               <div class="content">
                 <span class="step-number">04</span>
                 <div class="card-body">
                   <div class="step-icon">
-                    <i class="bi bi-rocket-takeoff"></i>
+                    <i class="bi bi-send-check"></i>
                   </div>
                   <div class="step-content">
-                    <h3>Launch &amp; Support</h3>
-                    <p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt.</p>
+                    <h3>Lancer l'alerte</h3>
+                    <p>Une fois validé, le point apparaîtra instantanément sur la carte.</p>
+                    <button type="button" class="btn btn-primary w-100 mt-2" onclick="ajouterPointSurCarte()">
+                      Ajouter le Spot <i class="bi bi-arrow-right"></i>
+                    </button>
                   </div>
                 </div>
               </div>
-            </div><!-- End Process Item -->
+            </div>
 
           </div>
         </div>
@@ -346,8 +362,8 @@
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <span class="description-title">Testimonials</span>
-        <h2>Testimonials</h2>
+        <span class="description-title">Témoignages</span>
+        <h2>Témoignages</h2>
         <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
       </div><!-- End Section Title -->
 
@@ -1291,43 +1307,14 @@
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // 1. Initialisation
-        var map = L.map('map').setView([48.35, -4.48], 11);
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
-
-        // 2. Les points (Marqueurs bleus)
-        var locations = [
-            { lat: 48.3908, lng: -4.4357, title: "Plage du Moulin Blanc" },
-            { lat: 48.3394, lng: -4.6122, title: "Pointe du Petit Minou" },
-            { lat: 48.3765, lng: -4.3640, title: "Port de Plougastel" },
-            { lat: 48.2754, lng: -4.5977, title: "Anse de Camaret" },
-            { lat: 48.3585, lng: -4.5705, title: "Technopôle Brest-Iroise" }
-        ];
-
-        locations.forEach(function(loc) {
-            L.marker([loc.lat, loc.lng]).addTo(map)
-            .bindPopup("<b>" + loc.title + "</b><br>Rendez-vous ici !");
-        });
-
-        // 3. La fonction de zoom au clic
-        window.focusMap = function(lat, lng, title) {
-            map.flyTo([lat, lng], 14, { animate: true, duration: 1.5 });
-            L.popup().setLatLng([lat, lng]).setContent("<b>" + title + "</b>").openOn(map);
-        };
-        
-        // Petit fix pour l'affichage
-        setTimeout(function(){ map.invalidateSize(); }, 500);
-    });
-  </script>
+  <script src="script.js"></script>
 
   <style>
     .cursor-pointer { cursor: pointer; transition: 0.3s; }
   </style>
+
 
 </body>
 
