@@ -6,27 +6,19 @@ let actionsData = [];
 ========================= */
 
 async function chargerUtilisateurs() {
-  try {
-    const res = await fetch(
-      "https://raw.githubusercontent.com/Les-Galaxy-lifers/RadeUp/main/BDD/users.json"
-    );
-    const data = await res.json();
-    usersData = data.bénévoles ?? [];
-  } catch (err) {
-    console.error("Erreur chargement utilisateurs :", err);
-  }
+  const res = await fetch(
+    "https://raw.githubusercontent.com/Les-Galaxy-lifers/RadeUp/main/BDD/users.json"
+  );
+  const data = await res.json();
+  usersData = data.bénévoles;
 }
 
 async function chargerActions() {
-  try {
-    const res = await fetch(
-      "https://raw.githubusercontent.com/Les-Galaxy-lifers/RadeUp/main/BDD/data.json"
-    );
-    const data = await res.json();
-    actionsData = data.actions ?? [];
-  } catch (err) {
-    console.error("Erreur chargement actions :", err);
-  }
+  const res = await fetch(
+    "https://raw.githubusercontent.com/Les-Galaxy-lifers/RadeUp/main/BDD/data.json"
+  );
+  const data = await res.json();
+  actionsData = data.actions;
 }
 
 /* =========================
@@ -38,40 +30,42 @@ function genererTemoignages() {
   wrapper.innerHTML = "";
 
   actionsData.forEach(action => {
-    if (!action.comments || action.comments.length === 0) return;
+    if (!action.comments) return;
 
     action.comments.forEach(comment => {
-
-      // 🔹 Adapter "comment.userId" si nécessaire
-      const user = usersData.find(u => u.id === comment.userId);
-
-      const userName = user?.name ?? "Utilisateur inconnu";
-      const userRole = user?.role ?? "Bénévole";
-      const userImg = user?.photo ?? "assets/img/testimonials/testimonials-1.jpg";
+      const user = usersData.find(u => u.id === action.creator);
 
       const slide = document.createElement("div");
       slide.className = "swiper-slide";
 
       slide.innerHTML = `
-        <div class="testimonial-item">
-          <img src="${userImg}" 
-               class="testimonial-img" 
-               alt="${userName}"
-               onerror="this.src='assets/img/testimonials/testimonials-1.jpg'">
-          <h3>${userName}</h3>
-          <h4>${userRole}</h4>
-          <div class="stars">
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
+        <div class="testimonial-card">
+          <div class="testimonial-content">
+            <p>
+              <i class="bi bi-quote quote-icon"></i>
+              ${comment}
+            </p>
           </div>
-          <p>
-            <i class="bi bi-quote quote-icon-left"></i>
-            <span>${comment.text ?? comment}</span>
-            <i class="bi bi-quote quote-icon-right"></i>
-          </p>
+
+          <div class="testimonial-profile">
+            <div class="rating">
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star"></i>
+            </div>
+
+            <div class="profile-info">
+              <img src="${user?.image || 'assets/img/person/default.webp'}"
+                   alt="Profile Image">
+              <div>
+                <h3>
+                  ${user ? `${user.firstName} ${user.lastName}` : "Anonyme"}
+                </h3>
+              </div>
+            </div>
+          </div>
         </div>
       `;
 
@@ -91,26 +85,23 @@ async function initTestimonials() {
   ]);
 
   genererTemoignages();
-  reinitSwiper(); // obligatoire
+  reinitSwiper(); // 🔥 OBLIGATOIRE
 }
 
 document.addEventListener("DOMContentLoaded", initTestimonials);
-
-/* =========================
-   SWIPER
-========================= */
-
 function reinitSwiper() {
-  document.querySelectorAll(".init-swiper").forEach(el => {
+  document.querySelectorAll('.init-swiper').forEach(el => {
 
+    // Détruire l'ancien Swiper
     if (el.swiper) {
       el.swiper.destroy(true, true);
     }
 
-    const configScript = el.querySelector(".swiper-config");
-    if (!configScript) return;
-
+    // Lire la config JSON du template
+    const configScript = el.querySelector('.swiper-config');
     const config = JSON.parse(configScript.textContent);
+
+    // Recréer Swiper
     new Swiper(el, config);
   });
 }
