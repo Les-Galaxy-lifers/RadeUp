@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function() {
             
             // --- MODIFICATION : Marqueur VERT pour la proposition de lieu ---
             var customIcon = new L.Icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/markers-default/green.png',
+                iconUrl: 'assets/img/marker.png',
                 shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
                 iconSize: [25, 41], 
                 iconAnchor: [12, 41], 
