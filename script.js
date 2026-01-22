@@ -201,7 +201,7 @@ function ajouterPointSurCarte() {
     localStorage.setItem('myHybridEvents', JSON.stringify(eventsArray));
 
     // 4. Feedback
-    alert("✅ Action ajoutée avec succès ! (Sauvegardée localement)");
+    alert("✅ Action ajoutée avec succès !");
     loadEvents(); // On recharge tout pour voir le nouveau point
     document.getElementById('map-section').scrollIntoView({behavior: 'smooth'});
 
