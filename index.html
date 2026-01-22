@@ -316,17 +316,32 @@
                 <span class="step-number">03</span>
                 <div class="card-body">
                   <div class="step-icon">
-                    <i class="bi bi-exclamation-circle"></i>
+                    <i class="bi bi-sliders"></i>
                   </div>
                   <div class="step-content">
-                    <h3>Type & Urgence</h3>
-                    <select class="form-select" id="inputType">
-                      <option selected>Sélectionner...</option>
-                      <option value="Plastique">Plastique & Filets</option>
-                      <option value="Verre">Verre & Débris</option>
-                      <option value="Tout venant">Tout venant (Gros volume)</option>
-                      <option value="Urgence">🚨 URGENCE MARÉE NOIRE</option>
-                    </select>
+                    <h3>Détails de l'action</h3>
+                    
+                    <div class="mb-3">
+                      <label for="inputType" class="form-label text-muted small">Type d'action</label>
+                      <select class="form-select" id="inputType">
+                        <option value="Nettoyage" selected>Nettoyage classique</option>
+                        <option value="Urgent">🚨 Urgent / Zone polluée</option>
+                        <option value="Tri sélectif">Tri sélectif</option>
+                        <option value="Sensibilisation">Sensibilisation / Éducatif</option>
+                        <option value="Afterwork">Afterwork Clean</option>
+                      </select>
+                    </div>
+
+                    <div class="mb-2">
+                      <label for="inputLevel" class="form-label text-muted small">Niveau de difficulté</label>
+                      <select class="form-select" id="inputLevel">
+                        <option value="Facile">🟢 Facile</option>
+                        <option value="Difficile">🔴 Difficile (Rochers/Accès)</option>
+                        <option value="Famille">👨‍👩‍👧‍👦 Famille bienvenue</option>
+                        <option value="Sportif">🏃 Sportif</option>
+                      </select>
+                    </div>
+
                   </div>
                 </div>
               </div>
