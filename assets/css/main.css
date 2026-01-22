@@ -3089,29 +3089,30 @@ section,
 
 
 /* Style du bouton profil */
-.profile-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-     margin-right: 15px; /* Espace sur mobile */
-}
-
-.profile-btn i {
-    font-size: 28px; /* Taille de l'icone */
-    color: var(--nav-color); /* Utilise la couleur par défaut du menu */
-    transition: 0.3s;
-}
-
-/* Changement de couleur au survol (utilise la couleur principale du thème) */
-.profile-btn:hover i {
-    color: var(--nav-hover-color); 
-    transform: scale(1.1); /* Petit effet de zoom sympa */
-}
-
-  /* Ajustement spécifique pour l'ordinateur */
-@media (min-width: 1200px) {
     .profile-btn {
-      margin-right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        margin-right: 20px; /* Espace entre l'icône et le texte 'Home' */
     }
-}
+
+    .profile-btn i {
+        font-size: 32px; /* TAILLE AUGMENTÉE (était 28px) */
+        color: var(--nav-color); /* Couleur par défaut */
+        transition: 0.3s;
+    }
+
+    /* Changement de couleur au survol */
+    .profile-btn:hover i {
+        color: var(--nav-hover-color); 
+        transform: scale(1.1); /* Petit zoom */
+    }
+
+    /* Ajustement spécifique pour mobile (optionnel) */
+    @media (max-width: 1199px) {
+        .profile-btn {
+          margin-right: 15px;
+          margin-bottom: 10px; /* Pour éviter que ça colle sur mobile */
+        }
+    }
