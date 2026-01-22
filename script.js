@@ -3,12 +3,16 @@
  * Compatible GitHub Pages
  */
 
+// --- VARIABLES GLOBALES ---
 var mainMap = null;
 var miniMap = null;
 var selectionMarker = null;
 
-// --- NOUVELLE VARIABLE : Pour retenir le choix de l'utilisateur ---
+// Variable pour l'inscription
 var missionSelectionnee = null; 
+
+// REGISTRE DES MARQUEURS (Important pour lier la liste à la carte)
+var markersList = {}; 
 
 document.addEventListener("DOMContentLoaded", function() {
     
@@ -16,10 +20,14 @@ document.addEventListener("DOMContentLoaded", function() {
     var mainMapElement = document.getElementById('map');
     
     if (mainMapElement) {
+        // Centrage sur la Rade de Brest
         mainMap = L.map('map').setView([48.35, -4.48], 11);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(mainMap);
 
+        // Chargement des données
         loadEvents();
+        
+        // Petit fix pour s'assurer que la carte s'affiche bien
         setTimeout(function(){ mainMap.invalidateSize(); }, 500);
     }
 
@@ -27,17 +35,22 @@ document.addEventListener("DOMContentLoaded", function() {
     var miniMapElement = document.getElementById('mini-map');
     if (miniMapElement) {
         miniMap = L.map('mini-map').setView([48.35, -4.48], 10);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(mainMap);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(miniMap);
 
         miniMap.on('click', function(e) {
             var lat = e.latlng.lat.toFixed(4);
             var lng = e.latlng.lng.toFixed(4);
+            
+            // Remplissage automatique des champs
             document.getElementById('inputLat').value = lat;
             document.getElementById('inputLng').value = lng;
+            
             var fb = document.getElementById('location-feedback');
             if(fb) fb.style.display = 'block';
 
+            // Gestion du marqueur rouge
             if (selectionMarker) miniMap.removeLayer(selectionMarker);
+            
             var redIcon = new L.Icon({
                 iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/markers-default/red.png',
                 shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -51,22 +64,22 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-// --- CHARGEMENT HYBRIDE ---
+// --- FONCTION CŒUR : CHARGEMENT HYBRIDE ---
 function loadEvents() {
-    // Nettoyage de l'interface (Attention: cela efface le HTML en dur si présent)
+    // 1. Nettoyage de la liste HTML
     var listeContainer = document.querySelector('.features-list');
-    
-    // Si la liste est vide (pas de HTML en dur), on ne fait rien, sinon on la vide pour le chargement JS
-    // Pour ton cas, si tu veux garder le HTML en dur + le JSON, commente la ligne ci-dessous :
     if(listeContainer) listeContainer.innerHTML = "";
     
+    // 2. Nettoyage de la carte et du registre
     if(mainMap) {
         mainMap.eachLayer(function (layer) {
             if (!!layer.toGeoJSON) mainMap.removeLayer(layer);
         });
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(mainMap);
+        markersList = {}; // On vide le registre des marqueurs
     }
 
+    // 3. Charger les données du fichier JSON (Le "Socle")
     fetch('BDD/data.json')
         .then(response => response.json())
         .then(data => {
@@ -75,16 +88,22 @@ function loadEvents() {
                     afficherEvenement(event);
                 });
             }
+            
+            // 4. Charger les données du LocalStorage (Les "Ajouts")
             chargerDonneesLocales();
+            
+            // 5. Mettre à jour le compteur
             updateCompteur();
         })
         .catch(error => {
             console.error("Erreur JSON (ou fichier absent):", error);
+            // Si le JSON plante, on charge quand même le local
             chargerDonneesLocales();
             updateCompteur();
         });
 }
 
+// Fonction pour lire la mémoire du navigateur
 function chargerDonneesLocales() {
     var saved = localStorage.getItem('myHybridEvents');
     if (saved) {
@@ -94,8 +113,9 @@ function chargerDonneesLocales() {
 }
 
 
-// --- AFFICHAGE ---
+// --- AFFICHAGE UNIFIÉ ---
 function afficherEvenement(event) {
+    // Protection contre les données incomplètes
     if (!event.address || !event.address.coordinates) return;
 
     var lat = event.address.coordinates.lat;
@@ -106,9 +126,11 @@ function afficherEvenement(event) {
     var level = event.difficulty || "Tous niveaux";
     var nbParticipants = event.participants ? event.participants.length : 0;
 
+    // Gestion de la Date et de l'Heure
     var dateFormatted = "Date à définir";
     if (event.start_date) {
         var dateObj = new Date(event.start_date);
+        // Vérification : est-ce une date valide ?
         if (!isNaN(dateObj.getTime())) {
             dateFormatted = dateObj.toLocaleDateString('fr-FR', {day: 'numeric', month: 'short'}) + 
                             " à " + 
@@ -116,22 +138,33 @@ function afficherEvenement(event) {
         }
     }
 
+    // Couleurs et Icônes
     var iconClass = "bi-trash"; 
     var badgeClass = "bg-primary"; 
     if (type.includes("Urgent")) { iconClass = "bi-exclamation-triangle"; badgeClass = "bg-warning text-dark"; } 
     else if (type.includes("Sensibilisation")) { iconClass = "bi-info-circle"; badgeClass = "bg-info text-dark"; } 
     else if (type.includes("Tri")) { iconClass = "bi-recycle"; badgeClass = "bg-success"; }
 
-    // On s'assure que le clic sur le marqueur sélectionne aussi la mission
+    // --- A. CRÉATION DU MARQUEUR ---
     var marker = L.marker([lat, lng]).addTo(mainMap);
-    var popupContent = `<b>${title}</b><br>📅 ${dateFormatted}<br><span class="badge ${badgeClass}">${type}</span>`;
+    var popupContent = `
+        <b>${title}</b><br>
+        📍 ${event.address.address}<br>
+        📅 ${dateFormatted}<br>
+        👥 ${nbParticipants} participants<br>
+        <span class="badge ${badgeClass}">${type}</span>
+    `;
     marker.bindPopup(popupContent);
     
-    // Ajout d'un événement clic sur le marqueur pour sélectionner la mission
+    // Clic sur le marqueur = Sélection de la mission
     marker.on('click', function() {
-        missionSelectionnee = title; // On retient le titre
+        missionSelectionnee = title;
     });
 
+    // IMPORTANT : On sauvegarde le marqueur dans le registre
+    markersList[title] = marker;
+
+    // --- B. CRÉATION ÉLÉMENT LISTE ---
     var htmlItem = `
         <div class="feature-item cursor-pointer" onclick="focusMap(${lat}, ${lng}, '${title.replace(/'/g, "\\'")}')">
           <div class="icon-box"><i class="bi ${iconClass}"></i></div>
@@ -147,8 +180,10 @@ function afficherEvenement(event) {
     if(listeContainer) listeContainer.insertAdjacentHTML('beforeend', htmlItem);
 }
 
-// --- AJOUT D'UN POINT ---
+
+// --- AJOUT D'UN POINT (SAUVEGARDE LOCALE) ---
 function ajouterPointSurCarte() {
+    // 1. Récupération du formulaire
     var nom = document.getElementById('inputName').value;
     var lat = document.getElementById('inputLat').value;
     var lng = document.getElementById('inputLng').value;
@@ -161,9 +196,16 @@ function ajouterPointSurCarte() {
         alert("Merci de remplir tous les champs !"); return;
     }
 
+    // 2. Création de l'objet (Structure IDENTIQUE au JSON)
     var newEvent = {
         name: nom,
-        address: { address: "Lieu ajouté (Local)", coordinates: { lat: parseFloat(lat), lng: parseFloat(lng) } },
+        address: {
+            address: "Lieu ajouté (Local)",
+            coordinates: {
+                lat: parseFloat(lat),
+                lng: parseFloat(lng)
+            }
+        },
         start_date: dateValue,
         participants: [],
         creator_name: orga,
@@ -171,15 +213,20 @@ function ajouterPointSurCarte() {
         difficulty: niveau
     };
 
+    // 3. Sauvegarde dans le LocalStorage (La magie)
     var existingEvents = localStorage.getItem('myHybridEvents');
     var eventsArray = existingEvents ? JSON.parse(existingEvents) : [];
+    
     eventsArray.push(newEvent);
+    
     localStorage.setItem('myHybridEvents', JSON.stringify(eventsArray));
 
-    alert("✅ Action ajoutée avec succès !");
-    loadEvents(); 
+    // 4. Feedback
+    alert("✅ Action ajoutée avec succès ! (Sauvegardée localement)");
+    loadEvents(); // On recharge tout
     document.getElementById('map-section').scrollIntoView({behavior: 'smooth'});
 
+    // 5. Reset
     document.getElementById('inputName').value = "";
     document.getElementById('inputLat').value = "";
     document.getElementById('inputLng').value = "";
@@ -188,48 +235,47 @@ function ajouterPointSurCarte() {
     if (selectionMarker) { miniMap.removeLayer(selectionMarker); selectionMarker = null; }
 }
 
-// --- GLOBALES & LOGIQUE D'INSCRIPTION ---
 
+// --- FONCTIONS GLOBALES & LOGIQUE MÉTIER ---
+
+// Mise à jour du compteur (Kilos ramassés)
 function updateCompteur() {
     var count = document.querySelectorAll('.features-list .feature-item').length;
+    
+    // Simulation : 1 action = environ 24kg de déchets
+    var totalPoids = count * 24;
+
     var display = document.querySelector('.experience-box .years');
     if (display) {
-        display.innerText = count;
+        display.innerText = totalPoids;
     }
 }
 
-// MODIFICATION IMPORTANTE ICI : On enregistre la sélection
-// MODIFICATION : Ouvre la VRAIE bulle du marqueur
+// Zoom sur la carte ET ouverture de la bulle correspondante
 function focusMap(lat, lng, title) {
-    // 1. On mémorise la mission choisie (pour l'inscription)
+    // 1. On mémorise la mission choisie
     missionSelectionnee = title;
     
     if (mainMap) {
-        // 2. On zoome vers le point
+        // 2. On zoome
         mainMap.flyTo([lat, lng], 14, { animate: true, duration: 1.5 });
         
-        // 3. On cherche le marqueur correspondant sur la carte pour l'ouvrir
-        // On parcourt tous les calques de la carte
-        mainMap.eachLayer(function(layer) {
-            // Si le calque est un Marqueur ET qu'il a des coordonnées
-            if (layer instanceof L.Marker && layer.getLatLng) {
-                var markerLoc = layer.getLatLng();
-                
-                // On compare les coordonnées (avec une petite marge d'erreur pour les décimales)
-                // Si ça correspond à notre clic dans la liste...
-                if (Math.abs(markerLoc.lat - lat) < 0.0001 && Math.abs(markerLoc.lng - lng) < 0.0001) {
-                    // ... On ouvre SA bulle (qui contient déjà toutes les infos complètes)
-                    layer.openPopup();
-                }
-            }
-        });
+        // 3. On récupère le marqueur exact dans notre registre
+        var markerCible = markersList[title];
+        
+        if (markerCible) {
+            // On ouvre la VRAIE bulle du marqueur
+            markerCible.openPopup();
+        } else {
+            // Sécurité si non trouvé
+            L.popup().setLatLng([lat, lng]).setContent("<b>" + title + "</b>").openOn(mainMap);
+        }
 
-        // 4. On scroll vers la carte
         document.getElementById('map-section').scrollIntoView({behavior: 'smooth', block: 'center'});
     }
 }
 
-// NOUVELLE FONCTION : Vérification de l'inscription
+// Vérification de l'inscription
 function gererInscription() {
     if (missionSelectionnee === null) {
         // Cas 1 : Rien n'est sélectionné
@@ -237,7 +283,5 @@ function gererInscription() {
     } else {
         // Cas 2 : Une mission est sélectionnée
         alert("✅ Félicitations !\n\nVous êtes bien inscrit à la mission :\n" + missionSelectionnee + "\n\nVous recevrez les détails par mail.");
-        // Optionnel : On peut remettre à zéro après l'inscription
-        // missionSelectionnee = null; 
     }
 }
