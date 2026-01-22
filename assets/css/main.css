@@ -3084,35 +3084,3 @@ section,
 .close-modal {
     position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: #aaa;
 }
-
-
-
-
-/* Style du bouton profil */
-    .profile-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-decoration: none;
-        margin-right: 20px; /* Espace entre l'icône et le texte 'Home' */
-    }
-
-    .profile-btn i {
-        font-size: 32px; /* TAILLE AUGMENTÉE (était 28px) */
-        color: var(--nav-color); /* Couleur par défaut */
-        transition: 0.3s;
-    }
-
-    /* Changement de couleur au survol */
-    .profile-btn:hover i {
-        color: var(--nav-hover-color); 
-        transform: scale(1.1); /* Petit zoom */
-    }
-
-    /* Ajustement spécifique pour mobile (optionnel) */
-    @media (max-width: 1199px) {
-        .profile-btn {
-          margin-right: 15px;
-          margin-bottom: 10px; /* Pour éviter que ça colle sur mobile */
-        }
-    }
