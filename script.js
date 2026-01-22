@@ -238,16 +238,15 @@ function ajouterPointSurCarte() {
 
 // --- FONCTIONS GLOBALES & LOGIQUE MÉTIER ---
 
-// Mise à jour du compteur (Kilos ramassés)
-// DANS SCRIPT.JS
-
+// Mise à jour du compteur (Nombre réel d'actions)
 function updateCompteur() {
+    // On compte simplement combien il y a d'éléments dans la liste
     var count = document.querySelectorAll('.features-list .feature-item').length;
     
-    // ON A ENLEVÉ LA MULTIPLICATION (* 24)
     var display = document.querySelector('.experience-box .years');
     if (display) {
-        display.innerText = count; // Affiche 13
+        // On affiche le chiffre brut (ex: 13)
+        display.innerText = count;
     }
 }
 
