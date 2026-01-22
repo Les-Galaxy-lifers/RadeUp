@@ -284,3 +284,45 @@ function gererInscription() {
         alert("✅ Félicitations !\n\nVous êtes bien inscrit à la mission :\n" + missionSelectionnee + "\n\nVous recevrez les détails par mail.");
     }
 }
+
+
+
+
+/* --- GESTION DU BOUTON ALERTER --- */
+
+// Ouvrir le formulaire
+function ouvrirModalAlerte() {
+    document.getElementById("modalAlerte").style.display = "flex";
+}
+
+// Fermer le formulaire
+function fermerModalAlerte() {
+    document.getElementById("modalAlerte").style.display = "none";
+}
+
+// Simuler l'envoi de l'alerte
+function envoyerAlerte(event) {
+    // Empêche la page de se recharger
+    event.preventDefault();
+    
+    // Récupération (pour l'exemple)
+    var loc = document.getElementById('alerteLocalisation').value;
+    
+    // Fermer la modale
+    fermerModalAlerte();
+    
+    // Message de succès
+    alert("🚨 SIGNALEMENT ENREGISTRÉ !\n\nMerci pour votre vigilance.\nLieu : " + loc + "\n\nNos équipes et la communauté sont informées.");
+    
+    // Vider le formulaire pour la prochaine fois
+    document.getElementById('formAlerte').reset();
+}
+
+// Fermeture universelle au clic en dehors (Mise à jour si tu l'as déjà)
+window.onclick = function(event) {
+    var modalAlerte = document.getElementById("modalAlerte");
+    // Si tu as d'autres modales, ajoute-les ici avec des conditions OU (||)
+    if (event.target == modalAlerte) {
+        modalAlerte.style.display = "none";
+    }
+}
