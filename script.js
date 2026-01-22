@@ -181,4 +181,17 @@ function ajouterPointSurCarte() {
         miniMap.removeLayer(selectionMarker);
         selectionMarker = null;
     }
+
+
+    // --- FIX : Forcer l'affichage de la Mini-Map ---
+    // Parfois la carte reste grise si elle est chargée dans un onglet caché.
+    // Ce bout de code force le rafraichissement dès qu'on passe la souris dessus.
+    var miniMapDiv = document.getElementById('mini-map');
+    if (miniMapDiv) {
+        miniMapDiv.addEventListener('mouseover', function() {
+            if (miniMap) {
+                miniMap.invalidateSize();
+            }
+        });
+    }
 }
