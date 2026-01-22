@@ -239,15 +239,15 @@ function ajouterPointSurCarte() {
 // --- FONCTIONS GLOBALES & LOGIQUE MÉTIER ---
 
 // Mise à jour du compteur (Kilos ramassés)
+// DANS SCRIPT.JS
+
 function updateCompteur() {
     var count = document.querySelectorAll('.features-list .feature-item').length;
     
-    // Simulation : 1 action = environ 24kg de déchets
-    var totalPoids = count * 24;
-
+    // ON A ENLEVÉ LA MULTIPLICATION (* 24)
     var display = document.querySelector('.experience-box .years');
     if (display) {
-        display.innerText = totalPoids;
+        display.innerText = count; // Affiche 13
     }
 }
 
