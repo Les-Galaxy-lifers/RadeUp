@@ -57,11 +57,11 @@ function genererTemoignages() {
             </div>
 
             <div class="profile-info">
-              <img src="${user?.image || 'assets/img/person/default.webp'}"
+              <img src="${user?.image || 'assets/img/person/canard.jpg'}"
                    alt="Profile Image">
               <div>
                 <h3>
-                  ${user ? `${user.firstName} ${user.lastName}` : "Anonyme"}
+                  ${user ? `${user.firstName} ${user.lastName}` : "Bernard"}
                 </h3>
               </div>
             </div>
