@@ -1,38 +1,921 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Connexion</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/css/login.css">
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Index - Nexa Bootstrap Template</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <!-- =======================================================
+  * Template Name: Nexa
+  * Template URL: https://bootstrapmade.com/nexa-bootstrap-agency-template/
+  * Updated: Aug 19 2025 with Bootstrap v5.3.7
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
 </head>
-<body>
 
-<div class="login-container">
-    <h1>Connexion</h1>
+<body class="index-page">
 
-    <form id="loginForm">
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" required>
-        </div>
+  <header id="header" class="header d-flex align-items-center sticky-top">
+    <div class="container position-relative d-flex align-items-center justify-content-between">
 
-        <div class="form-group">
-            <label for="password">Mot de passe</label>
-            <input type="password" id="password" required>
-        </div>
+      <a href="index.html" class="logo d-flex align-items-center me-auto me-xl-0">
+        <!-- Uncomment the line below if you also wish to use an image logo -->
+        <!-- <img src="assets/img/logo.webp" alt=""> -->
+        <h1 class="sitename">RadeUP</h1>
+      </a>
 
-        <button type="submit" class="login-btn">Se connecter</button>
-    </form>
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="#hero" class="active">Home</a></li>
+          <li><a href="#map-section">Spots de collecte</a></li>
+          <li><a href="#testimonials">Témoignages</a></li>
+          <li><a href="#portfolio">Portfolio</a></li>
+          <li><a href="#team">Team</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
 
-    <div class="extra">
-        <p><a href="#">Mot de passe oublié ?</a></p>
-        <p>Pas encore de compte ? <a href="inscription.html">Inscrivez-vous</a></p>
+        <a href="profil.html" class="profile-btn ms-lg-3" title="Mon Profil">
+          <i class="bi bi-person-circle"></i>
+        </a>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+
     </div>
-</div>
+  </header>
 
-<!-- IMPORTANT : users.js AVANT login.js -->
-<script src="BDD/users.js"></script>
-<script src="assets/js/login.js"></script>
+  <main class="main">
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero section">
+      
+      <div class="hero-background">
+        <div class="hero-overlay"></div>
+      </div>
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+        
+        <div class="row justify-content-center text-center">
+          <div class="col-lg-10">
+            <div class="hero-content" data-aos="fade-up" data-aos-delay="200">
+              <h1>Ta Rade - Ton Impact Maintenant.</h1>
+              <p>De Plouzané à Plougastel-Daoulas, rejoins le mouvement. Transforme chaque balade en mission pour l'océan. Repère les déchets, crée ton équipe, et nettoie le littoral brestois.</p>
+
+              <div class="hero-btns" data-aos="fade-up" data-aos-delay="300">
+                <a href="#map-section" class="btn btn-primary">Trouver une collecte</a>
+                
+                <a href="javascript:void(0)" class="btn btn-alerte" onclick="ouvrirModalAlerte()">
+                  <i class="bi bi-exclamation-triangle-fill" style="margin-right: 8px;"></i>
+                  Alerter
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <div class="hero-image-container" data-aos="zoom-in" data-aos-delay="400">
+              <div class="hero-image">
+                <img src="assets/img/about/about-15.jpg" alt="Les chiffres clés" class="img-fluid">
+                <div class="image-decoration"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-lg-10">
+            <div class="hero-stats" data-aos="fade-up" data-aos-delay="500">
+              <div class="stat-item">
+                <div class="stat-icon">
+                  <i class="bi bi-trophy"></i>
+                </div>
+                <h3><span data-purecounter-start="0" data-purecounter-end="29" data-purecounter-duration="1" class="purecounter"></span>+</h3>
+                <p>Nombre d'actions réalisées</p>
+              </div>
+              <div class="stat-item">
+                <div class="stat-icon">
+                  <i class="bi bi-people"></i>
+                </div>
+                <h3><span data-purecounter-start="0" data-purecounter-end="218" data-purecounter-duration="1" class="purecounter"></span>+</h3>
+                <p>Participants</p>
+              </div>
+              <div class="stat-item">
+                <div class="stat-icon">
+                  <i class="bi bi-lightning"></i>
+                </div>
+                <h3><span data-purecounter-start="0" data-purecounter-end="95" data-purecounter-duration="1" class="purecounter"></span>%</h3>
+                <p>Taux de Réussite</p>
+              </div>
+              <div class="stat-item">
+                <div class="stat-icon">
+                  <i class="bi bi-globe"></i>
+                </div>
+                <h3><span data-purecounter-start="0" data-purecounter-end="654" data-purecounter-duration="1" class="purecounter"></span>+</h3>
+                <p>Kilos de déchets<br>ramassés</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div id="modalAlerte" class="custom-modal-overlay" style="display: none; z-index: 99999;">
+        <div class="custom-modal-content alerte-content">
+          <span class="close-modal" onclick="fermerModalAlerte()">&times;</span>
+          
+          <div class="text-center mb-4">
+            <i class="bi bi-exclamation-triangle-fill text-danger" style="font-size: 3rem;"></i>
+            <h3>Signaler un spot pollué</h3>
+            <p class="text-muted small">Aidez la communauté à repérer les zones urgentes.</p>
+          </div>
+
+          <form id="formAlerte" onsubmit="envoyerAlerte(event)">
+              
+              <div class="mb-3 text-start">
+                  <label for="alertePhoto" class="form-label fw-bold small">Photo du lieu (Optionnel)</label>
+                  <input type="file" class="form-control" id="alertePhoto" accept="image/png, image/jpeg">
+              </div>
+
+              <div class="mb-3 text-start">
+                  <label for="alerteLocalisation" class="form-label fw-bold small">Emplacement précis *</label>
+                  <input type="text" class="form-control" id="alerteLocalisation" placeholder="Ex: Plage du Moulin Blanc..." required>
+              </div>
+
+              <div class="mb-4 text-start">
+                  <label for="alerteDescription" class="form-label fw-bold small">Description du problème *</label>
+                  <textarea class="form-control" id="alerteDescription" rows="3" placeholder="Ex: Déchets plastiques..." required></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-danger w-100 py-2">Envoyer le signalement</button>
+          </form>
+
+        </div>
+      </div>
+
+    </section><!-- /Hero Section -->
+
+    <!-- Map Section -->
+    <section id="map-section" class="about section">
+
+      <div class="container section-title" data-aos="fade-up">
+        <span class="description-title">Carte Interactive</span>
+        <h2>Les Spots de Collecte</h2>
+        <p>Cliquez sur un événement dans la liste pour le localiser sur la carte.</p>
+      </div>
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row gx-0 gx-lg-5 gy-5 align-items-center">
+          
+          <div class="col-lg-6" data-aos="zoom-out" data-aos-delay="200">
+            <div class="image-wrapper">
+              
+              <div class="image-box">
+                <div id="map" style="width: 100%; height: 500px; border-radius: 10px; z-index: 1;"></div>
+              </div>
+              
+              <div class="experience-box" style="z-index: 1000;">
+                <div class="years">5</div> 
+                <div class="text">Actions<br>En cours</div>
+              </div>
+              
+            </div>
+          </div>
+
+          <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
+            <div class="content">
+              <div class="section-header">
+                <h2>Prochains Ramassages</h2>
+              </div>
+
+              <p class="highlight-text">Sélectionnez un événement ci-dessous pour voir le point de rendez-vous sur la carte.</p>
+
+              <div class="features-list" style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
+              </div>
+
+              <div class="cta-buttons">
+                <a href="#steps" class="btn-learn-more">Proposer un lieu</a>
+                <a href="javascript:void(0)" class="btn-get-started" onclick="gererInscription()">M'inscrire</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section><!-- Map Section -->
+
+
+    <section id="steps" class="steps section">
+      <div class="container section-title" data-aos="fade-up">
+        <span class="description-title">Contribuer</span>
+        <h2>Proposer un Spot</h2>
+        <p>Vous avez repéré une zone polluée ? Ajoutez-la à la carte en 4 étapes simples.</p>
+      </div>
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="steps-5">
+          <div class="process-container">
+
+            <div class="process-item" data-aos="fade-up" data-aos-delay="200">
+              <div class="content">
+                <span class="step-number">01</span>
+                <div class="card-body">
+                  <div class="step-icon">
+                    <i class="bi bi-tag"></i>
+                  </div>
+                  <div class="step-content">
+                    <h3>Nom du Spot</h3>
+                    <div class="mb-3">
+                      <input type="text" class="form-control" id="inputName" placeholder="Ex: Plage des Blancs Sablons">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="process-item" data-aos="fade-up" data-aos-delay="300">
+              <div class="content">
+                <span class="step-number">02</span>
+                <div class="card-body">
+                  <div class="step-icon">
+                    <i class="bi bi-geo"></i>
+                  </div>
+                  <div class="step-content">
+                    <h3>Localisation</h3>
+                    <p class="small text-muted">Cliquez directement sur la carte ci-dessous pour placer le point.</p>
+                    
+                    <div id="mini-map" style="width: 100%; height: 250px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ddd;"></div>
+
+                    <div class="row g-2">
+                      <div class="col-6">
+                        <input type="text" class="form-control" id="inputLat" placeholder="Latitude" readonly>
+                      </div>
+                      <div class="col-6">
+                        <input type="text" class="form-control" id="inputLng" placeholder="Longitude" readonly>
+                      </div>
+                    </div>
+                    <small id="location-feedback" class="text-success" style="font-size: 0.8em; display:none;">
+                      <i class="bi bi-check-circle"></i> Coordonnées récupérées !
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="process-item" data-aos="fade-up" data-aos-delay="400">
+              <div class="content">
+                <span class="step-number">03</span>
+                <div class="card-body">
+                  <div class="step-icon">
+                    <i class="bi bi-sliders"></i>
+                  </div>
+                  <div class="step-content">
+                    <h3>Détails de l'action</h3>
+                    
+                    <div class="mb-3">
+                      <label for="inputTime" class="form-label text-muted small">Quand ?</label>
+                      <input type="datetime-local" class="form-control" id="inputTime">
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="inputOrg" class="form-label text-muted small">Organisateur</label>
+                      <input type="text" class="form-control" id="inputOrg" placeholder="Ex: BDE, Asso, Mairie...">
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="inputType" class="form-label text-muted small">Type d'action</label>
+                      <select class="form-select" id="inputType">
+                        <option value="Nettoyage" selected>Nettoyage classique</option>
+                        <option value="Urgent">🚨 Urgent / Zone polluée</option>
+                        <option value="Tri sélectif">Tri sélectif</option>
+                        <option value="Sensibilisation">Sensibilisation / Éducatif</option>
+                        <option value="Afterwork">Afterwork Clean</option>
+                      </select>
+                    </div>
+
+                    <div class="mb-2">
+                      <label for="inputLevel" class="form-label text-muted small">Niveau de difficulté</label>
+                      <select class="form-select" id="inputLevel">
+                        <option value="Facile">🟢 Facile</option>
+                        <option value="Difficile">🔴 Difficile (Rochers/Accès)</option>
+                        <option value="Famille">👨‍👩‍👧‍👦 Famille bienvenue</option>
+                        <option value="Sportif">🏃 Sportif</option>
+                      </select>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="process-item" data-aos="fade-up" data-aos-delay="500">
+              <div class="content">
+                <span class="step-number">04</span>
+                <div class="card-body">
+                  <div class="step-icon">
+                    <i class="bi bi-send-check"></i>
+                  </div>
+                  <div class="step-content">
+                    <h3>Lancer l'alerte</h3>
+                    <p>Une fois validé, le point apparaîtra instantanément sur la carte et dans la liste.</p>
+                    <button type="button" class="btn btn-primary w-100 mt-2" onclick="ajouterPointSurCarte()">
+                      Ajouter le Spot <i class="bi bi-arrow-right"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </section><!-- /Steps Section -->
+
+
+<!-- Temoignage Section -->
+<section id="testimonials" class="testimonials section light-background">
+
+  <!-- Section Title -->
+  <div class="container section-title" data-aos="fade-up">
+    <span class="description-title">Témoignages</span>
+    <h2>Témoignages</h2>
+    <p>Voici ce que disent nos bénévoles après la réalisation de leurs projets</p>
+  </div><!-- End Section Title -->
+
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+    <div class="testimonials-slider swiper init-swiper">
+      <script type="application/json" class="swiper-config">
+        {
+          "loop": true,
+          "speed": 800,
+          "autoplay": {
+            "delay": 5000
+          },
+          "slidesPerView": 1,
+          "spaceBetween": 30,
+          "pagination": {
+            "el": ".swiper-pagination",
+            "type": "bullets",
+            "clickable": true
+          },
+          "breakpoints": {
+            "768": {
+              "slidesPerView": 2
+            },
+            "1200": {
+              "slidesPerView": 3
+            }
+          }
+        }
+      </script>
+
+      <!-- 🔽 SLIDES GÉNÉRÉES PAR JAVASCRIPT -->
+      <div class="swiper-wrapper" id="testimonials-wrapper"></div>
+
+      <div class="swiper-pagination"></div>
+    </div>
+
+  </div>
+
+</section><!-- /Temoignage Section -->
+
+
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="portfolio section">
+
+      <div class="container section-title" data-aos="fade-up">
+        <span class="description-title">Nos Victoires</span>
+        <h2>Dernières Collectes</h2>
+        <p>Retour en images sur les moments forts : des tonnes de déchets retirés grâce à la force du collectif.</p>
+      </div><div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="isotope-layout" data-default-filter="*" data-layout="fitRows" data-sort="original-order">
+
+          <div class="portfolio-filters-wrapper" data-aos="fade-up" data-aos-delay="100">
+            <ul class="portfolio-filters isotope-filters">
+              <li data-filter="*" class="filter-active">Tout voir</li>
+              <li data-filter=".filter-plage">Plages</li>
+              <li data-filter=".filter-port">Ports</li>
+              <li data-filter=".filter-insolite">Insolite / Urbain</li>
+            </ul>
+          </div>
+
+          <div class="row gy-4 portfolio-grid isotope-container" data-aos="fade-up" data-aos-delay="200">
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-plage">
+              <div class="portfolio-card">
+                <div class="image-container">
+                  <img src="assets/img/portfolio/portfolio-1.jpg" class="img-fluid" alt="Ramassage Moulin Blanc" loading="lazy">
+                  <div class="overlay">
+                    <div class="overlay-content">
+                      <a href="assets/img/portfolio/portfolio-1.jpg" class="glightbox zoom-link" title="Victoire Moulin Blanc">
+                        <i class="bi bi-zoom-in"></i>
+                      </a>
+                      <a href="portfolio-details.html" class="details-link" title="Voir les détails">
+                        <i class="bi bi-arrow-right"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="content">
+                  <h3>Opération Moulin Blanc</h3>
+                  <p><strong>33kg</strong> de déchets retirés en 2h par 80 bénévoles.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-port">
+              <div class="portfolio-card">
+                <div class="image-container">
+                  <img src="assets/img/portfolio/portfolio-2.jpg" class="img-fluid" alt="Nettoyage Port" loading="lazy">
+                  <div class="overlay">
+                    <div class="overlay-content">
+                      <a href="assets/img/portfolio/portfolio-2.jpg" class="glightbox zoom-link" title="Nettoyage Port de Commerce">
+                        <i class="bi bi-zoom-in"></i>
+                      </a>
+                      <a href="portfolio-details.html" class="details-link" title="Voir les détails">
+                        <i class="bi bi-arrow-right"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="content">
+                  <h3>Port de Commerce</h3>
+                  <p>Action conjointe plongeurs & terre : récupération de filets fantômes.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-insolite">
+              <div class="portfolio-card">
+                <div class="image-container">
+                  <img src="assets/img/portfolio/portfolio-3.jpg" class="img-fluid" alt="Penfeld Urbain" loading="lazy">
+                  <div class="overlay">
+                    <div class="overlay-content">
+                      <a href="assets/img/portfolio/portfolio-3.jpg" class="glightbox zoom-link" title="Rives de la Penfeld">
+                        <i class="bi bi-zoom-in"></i>
+                      </a>
+                      <a href="portfolio-details.html" class="details-link" title="Voir les détails">
+                        <i class="bi bi-arrow-right"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="content">
+                  <h3>Rives de la Penfeld</h3>
+                  <p>Grand nettoyage urbain après les fêtes maritimes.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-plage">
+              <div class="portfolio-card">
+                <div class="image-container">
+                  <img src="assets/img/portfolio/portfolio-4.jpg" class="img-fluid" alt="Petit Minou" loading="lazy">
+                  <div class="overlay">
+                    <div class="overlay-content">
+                      <a href="assets/img/portfolio/portfolio-4.jpg" class="glightbox zoom-link" title="Pointe du Petit Minou">
+                        <i class="bi bi-zoom-in"></i>
+                      </a>
+                      <a href="portfolio-details.html" class="details-link" title="Voir les détails">
+                        <i class="bi bi-arrow-right"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="content">
+                  <h3>Pointe du Petit Minou</h3>
+                  <p>Ramassage post-tempête : <strong>120kg</strong> de plastique évacués.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-insolite">
+              <div class="portfolio-card">
+                <div class="image-container">
+                  <img src="assets/img/portfolio/portfolio-5.jpg" class="img-fluid" alt="Recouvrance Mégots" loading="lazy">
+                  <div class="overlay">
+                    <div class="overlay-content">
+                      <a href="assets/img/portfolio/portfolio-5.jpg" class="glightbox zoom-link" title="Quartier Recouvrance">
+                        <i class="bi bi-zoom-in"></i>
+                      </a>
+                      <a href="portfolio-details.html" class="details-link" title="Voir les détails">
+                        <i class="bi bi-arrow-right"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="content">
+                  <h3>Quartier Recouvrance</h3>
+                  <p>Chasse aux mégots : 15 000 unités recyclées avec MéGo!.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-port">
+              <div class="portfolio-card">
+                <div class="image-container">
+                  <img src="assets/img/portfolio/portfolio-6.jpg" class="img-fluid" alt="Marina Château" loading="lazy">
+                  <div class="overlay">
+                    <div class="overlay-content">
+                      <a href="assets/img/portfolio/portfolio-6.jpg" class="glightbox zoom-link" title="Marina du Château">
+                        <i class="bi bi-zoom-in"></i>
+                      </a>
+                      <a href="portfolio-details.html" class="details-link" title="Voir les détails">
+                        <i class="bi bi-arrow-right"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="content">
+                  <h3>Marina du Château</h3>
+                  <p>Nettoyage des pontons et sensibilisation des plaisanciers.</p>
+                </div>
+              </div>
+            </div>
+
+          </div></div>
+      </div>
+    </section>
+
+
+
+    <!-- Team Section -->
+    <section id="team" class="team section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <span class="description-title">Team</span>
+        <h2>Team</h2>
+        <p>Voici les membres ayant participé à la création de RadeUP</p>
+      </div><!-- End Section Title -->
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row g-4">
+
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+            <div class="team-member">
+              <div class="member-image">
+                <img src="assets/img/person/person-f-2.webp" class="img-fluid" alt="" loading="lazy">
+              </div>
+              <div class="member-info">
+                <h4>Romain D'Hem</h4>
+                <span>Scrum Master</span>
+                <p>Gardien du temps et de la méthode, il s'assure que l'équipe avance</p>
+              </div>
+            </div><!-- End Team Member -->
+          </div>
+
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+            <div class="team-member">
+              <div class="member-image">
+                <img src="assets/img/person/person-m-7.webp" class="img-fluid" alt="" loading="lazy">
+              </div>
+              <div class="member-info">
+                <h4>Jeanne Porcher</h4>
+                <span>Product Owner</span>
+                <p>Gardien de la vision, il tranche sur les fonctionnalités</p>
+              </div>
+            </div><!-- End Team Member -->
+          </div>
+
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+            <div class="team-member">
+              <div class="member-image">
+                <img src="assets/img/person/person-f-11.webp" class="img-fluid" alt="" loading="lazy">
+              </div>
+              <div class="member-info">
+                <h4>Mathys Bodennec</h4>
+                <span>Dev Team</span>
+                <p>Ils réalisent la solution (Tech, Design, Data).</p>
+              </div>
+            </div><!-- End Team Member -->
+          </div>
+
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+            <div class="team-member">
+              <div class="member-image">
+                <img src="assets/img/person/person-m-14.webp" class="img-fluid" alt="" loading="lazy">
+              </div>
+              <div class="member-info">
+                <h4>Paul Cornen</h4>
+                <span>Dev Team</span>
+                <p>Ils réalisent la solution (Tech, Design, Data).</p>
+              </div>
+            </div><!-- End Team Member -->
+          </div>
+
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+            <div class="team-member">
+              <div class="member-image">
+                <img src="assets/img/person/person-m-8.webp" class="img-fluid" alt="" loading="lazy">
+
+              </div>
+              <div class="member-info">
+                <h4>Lana Pourchasse</h4>
+                <span>Dev Team</span>
+                <p>Ils réalisent la solution (Tech, Design, Data).</p>
+              </div>
+            </div><!-- End Team Member -->
+          </div>
+
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+            <div class="team-member">
+              <div class="member-image">
+                <img src="assets/img/person/person-f-13.webp" class="img-fluid" alt="" loading="lazy">
+              </div>
+              <div class="member-info">
+                <h4>Henry Gollo</h4>
+                <span>Collaborateur</span>
+                <p>A financer la réalisation du projet</p>
+              </div>
+            </div><!-- End Team Member -->
+          </div>
+
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+            <div class="team-member">
+              <div class="member-image">
+                <img src="assets/img/person/person-m-15.webp" class="img-fluid" alt="" loading="lazy">
+              </div>
+              <div class="member-info">
+                <h4>Mathis Zan</h4>
+                <span>Collaborateur</span>
+                <p>A financer la réalisation du projet</p>
+              </div>
+            </div><!-- End Team Member -->
+          </div>
+
+        </div>
+
+      </div>
+
+    </section><!-- /Team Section -->
+
+    <!-- Faq Section -->
+    <section id="faq" class="faq section">
+          <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <span class="description-title">FAQ</span>
+        <h2>FAQ</h2>
+      </div><!-- End Section Title -->
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row justify-content-center">
+          <div class="col-lg-10">
+
+            <div class="faq-wrapper">
+
+              <div class="faq-item faq-active">
+                <div class="faq-header">
+                  <div class="faq-icon">
+                    <i class="bi bi-question-circle"></i>
+                  </div>
+                  <h4>Je n'ai jamais fait de ramassage, puis-je venir seul(e) ?</h4>
+                  <div class="faq-toggle">
+                    <i class="bi bi-plus"></i>
+                    <i class="bi bi-dash"></i>
+                  </div>
+                </div>
+                <div class="faq-content">
+                  <div class="content-inner">
+                    <p>Bien sûr ! La communauté est là pour s'entraider. Lors de chaque événement, un référent ou un ambassadeur est présent pour accueillir les nouveaux et expliquer les consignes de tri.</p>
+                  </div>
+                </div>
+              </div><!-- End FAQ Item -->
+
+              <div class="faq-item">
+                <div class="faq-header">
+                  <div class="faq-icon">
+                    <i class="bi bi-question-circle"></i>
+                  </div>
+                  <h4>Tout le monde peut-il organiser un ramassage ?</h4>
+                  <div class="faq-toggle">
+                    <i class="bi bi-plus"></i>
+                    <i class="bi bi-dash"></i>
+                  </div>
+                </div>
+                <div class="faq-content">
+                  <div class="content-inner">
+                    <p>Oui, chaque citoyen peut proposer une action. Une fois votre événement créé, il sera validé par l'équipe de l'association pour vérifier qu'il ne pose pas de problème de sécurité (marées, zones protégées) avant d'être publié sur la carte.</p>
+                  </div>
+                </div>
+              </div><!-- End FAQ Item -->
+
+              <div class="faq-item">
+                <div class="faq-header">
+                  <div class="faq-icon">
+                    <i class="bi bi-question-circle"></i>
+                  </div>
+                  <h4>Le site couvre-t-il tout le Finistère ?</h4>
+                  <div class="faq-toggle">
+                    <i class="bi bi-plus"></i>
+                    <i class="bi bi-dash"></i>
+                  </div>
+                </div>
+                <div class="faq-content">
+                  <div class="content-inner">
+                    <p>Pour le moment, l'outil se concentre spécifiquement sur le littoral de la Rade de Brest, de Plouzané à Plougastel-Daoulas, afin de garantir une coordination efficace avec les services de ramassage locaux.</p>
+                  </div>
+                </div>
+              </div><!-- End FAQ Item -->
+
+              <div class="faq-item">
+                <div class="faq-header">
+                  <div class="faq-icon">
+                    <i class="bi bi-question-circle"></i>
+                  </div>
+                  <h4>Quel matériel dois-je apporter ?</h4>
+                  <div class="faq-toggle">
+                    <i class="bi bi-plus"></i>
+                    <i class="bi bi-dash"></i>
+                  </div>
+                </div>
+                <div class="faq-content">
+                  <div class="content-inner">
+                    <p>Idéalement, venez avec une paire de gants de jardinage et des chaussures fermées. Si l'organisateur fournit des sacs ou des pinces, cela sera précisé dans la description de l'événement sur le site.</p>
+                  </div>
+                </div>
+              </div><!-- End FAQ Item -->
+
+              <div class="faq-item">
+                <div class="faq-header">
+                  <div class="faq-icon">
+                    <i class="bi bi-question-circle"></i>
+                  </div>
+                  <h4>Que faire si je trouve un déchet dangereux (seringue, fusée de détresse)</h4>
+                  <div class="faq-toggle">
+                    <i class="bi bi-plus"></i>
+                    <i class="bi bi-dash"></i>
+                  </div>
+                </div>
+                <div class="faq-content">
+                  <div class="content-inner">
+                    <p>Ne pas toucher. La plateforme comporte un guide de sécurité : signalez l'emplacement précis dans le compte-rendu de l'action et contactez les autorités compétentes (Police municipale ou Pompiers) comme indiqué dans nos consignes de sécurité.</p>
+                  </div>
+                </div>
+              </div><!-- End FAQ Item -->
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </section><!-- /Faq Section -->
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact section">
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <span class="description-title">Contact</span>
+        <h2>Contact</h2>
+        <p>Si vous avez des questions supplémentaires, n'hésitez pas à nous contacter.</p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+          <div class="contact-form-panel">
+            <div class="form-container">
+              <h3 class="text-center" >Envoyez-nous un message</h3>
+              <p>Si vous avez la moindre question, renseigner vos coordonnées et le sujet de votre demande et nous la traiterons dans les meilleurs délais.</p>
+
+              <form action="forms/contact.php" method="post" class="php-email-form">
+                <div class="form-floating mb-3">
+                  <input type="text" class="form-control" id="nameInput" name="name" placeholder="Full Name" required="">
+                  <label for="nameInput">Nom Prénom</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                  <input type="email" class="form-control" id="emailInput" name="email" placeholder="Email Address" required="">
+                  <label for="emailInput">Mail</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                  <input type="text" class="form-control" id="subjectInput" name="subject" placeholder="Subject" required="">
+                  <label for="subjectInput">Sujet</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                  <textarea class="form-control" id="messageInput" name="message" rows="5" placeholder="Your Message" style="height: 150px" required=""></textarea>
+                  <label for="messageInput">Votre message</label>
+                </div>
+
+                <div class="my-3">
+                  <div class="loading">Chargement</div>
+                  <div class="error-message"></div>
+                  <div class="sent-message">Message envoyé. Merci !</div>
+                </div>
+
+                <div class="d-grid">
+                  <button type="submit" class="btn-submit">Envoyez le message <i class="bi bi-send-fill ms-2"></i></button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- /Contact Section -->
+
+  </main>
+
+  <footer id="footer" class="footer light-background">
+    <div class="container ">
+      <div class="row gy-2 ">
+        <div class="col-lg-3 col-md-6 d-flex">
+          <i class="bi bi-telephone icon"></i>
+          <div>
+            <h4>Téléphone</h4>
+            <p>
+              <strong>Phone:</strong> <span>+33 02 70 58 94 75</span><br>
+              
+            </p>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 d-flex">
+          <i class="bi bi-envelope-open icon"></i>
+          <div>
+            <h4>Mail</h4>
+            <p>
+              <strong>Mail:</strong> <span>info@example.com</span><br>
+            </p>
+          </div>
+        </div>
+    </div>
+    <div class="text-center">
+      <p>© <span>Copyright</span> <strong class="px-1 sitename">Nexa</strong> <span>All Rights Reserved</span></p>
+      <div class="credits">
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you've purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/temoignage.js"></script>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <script src="script.js"></script>
+
+  <style>
+    .cursor-pointer { cursor: pointer; transition: 0.3s; }
+  </style>
+
+
 </body>
+
 </html>
