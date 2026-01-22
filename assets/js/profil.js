@@ -37,7 +37,7 @@ async function chargerEtAfficher() {
  */
 function afficherProfil() {
     const params = new URLSearchParams(window.location.search);
-    const userId = parseInt(params.get('id')) || 1; // ID 1 par défaut
+    const userId = parseInt(params.get('id')) || usersData.bénévoles[Math.floor(Math.random() * usersData.bénévoles.length)].id; // ID aléatoire par défaut
     
     const user = usersData.bénévoles.find(u => u.id === userId);
 
