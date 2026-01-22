@@ -1,9 +1,5 @@
-/* =========================
-   VARIABLES GLOBALES
-   (Renommées pour éviter le conflit avec users.js)
-========================= */
-let temoignageUsersData = [];
-let temoignageActionsData = [];
+let usersData = [];
+let actionsData = [];
 
 /* =========================
    CHARGEMENT DES JSON
@@ -14,8 +10,7 @@ async function chargerUtilisateurs() {
     "https://raw.githubusercontent.com/Les-Galaxy-lifers/RadeUp/main/BDD/users.json"
   );
   const data = await res.json();
-  // On cible .bénévoles car c'est la structure de ton JSON
-  temoignageUsersData = data.bénévoles; 
+  usersData = data.bénévoles;
 }
 
 async function chargerActions() {
@@ -23,8 +18,7 @@ async function chargerActions() {
     "https://raw.githubusercontent.com/Les-Galaxy-lifers/RadeUp/main/BDD/data.json"
   );
   const data = await res.json();
-  // On cible .actions car c'est la structure de ton JSON
-  temoignageActionsData = data.actions; 
+  actionsData = data.actions;
 }
 
 /* =========================
@@ -33,29 +27,17 @@ async function chargerActions() {
 
 function genererTemoignages() {
   const wrapper = document.getElementById("testimonials-wrapper");
-  if (!wrapper) return;
-  
   wrapper.innerHTML = "";
 
-  temoignageActionsData.forEach(action => {
-    // S'il n'y a pas de commentaires, on passe
+  actionsData.forEach(action => {
     if (!action.comments) return;
     console.log(usersData);
     action.comments.forEach(comment => {
-      // On trouve l'utilisateur correspondant
-      const user = temoignageUsersData.find(u => u.id === action.creator);
-
-      // Préparation des données d'affichage
-      const userName = user ? `${user.firstName} ${user.lastName}` : "Utilisateur Inconnu";
-      const userRole = user && user.role === "admin" ? "Organisateur" : "Bénévole";
-      // Utilise l'image du JSON ou une image par défaut locale si vide
-      const userImg = user && user.image ? user.image : "assets/img/testimonials/testimonials-1.jpg";
+      const user = usersData.find(u => u.id === action.creator);
 
       const slide = document.createElement("div");
       slide.className = "swiper-slide";
 
-      // --- C'EST ICI LA CORRECTION D'AFFICHAGE ---
-      // J'utilise la structure HTML native du template Nexa (testimonial-item)
       slide.innerHTML = `
         <div class="testimonial-item">
           <img src="${userImg}" class="testimonial-img" alt="${userName}" onerror="this.src='assets/img/testimonials/testimonials-1.jpg'">
@@ -64,29 +46,13 @@ function genererTemoignages() {
           <div class="stars">
             <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
           </div>
-
-          <div class="testimonial-profile">
-            <div class="rating">
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star"></i>
-            </div>
-
-            <div class="profile-info">
-              <img src="${user?.image || 'assets/img/person/default.webp'}"
-                   alt="Profile Image">
-              <div>
-                <h3>
-                  ${user ? `${user.firstName} ${user.lastName}` : "Anonyme"}
-                </h3>
-              </div>
-            </div>
-          </div>
+          <p>
+            <i class="bi bi-quote quote-icon-left"></i>
+            <span>${comment}</span>
+            <i class="bi bi-quote quote-icon-right"></i>
+          </p>
         </div>
       `;
-      // -------------------------------------------
 
       wrapper.appendChild(slide);
     });
@@ -98,28 +64,29 @@ function genererTemoignages() {
 ========================= */
 
 async function initTestimonials() {
-  try {
-    await Promise.all([
-      chargerUtilisateurs(),
-      chargerActions()
-    ]);
+  await Promise.all([
+    chargerUtilisateurs(),
+    chargerActions()
+  ]);
 
-    genererTemoignages();
-    reinitSwiper(); 
-  } catch (error) {
-    console.error("Erreur lors de l'initialisation des témoignages :", error);
-  }
+  genererTemoignages();
+  reinitSwiper(); // 🔥 OBLIGATOIRE
 }
 
 document.addEventListener("DOMContentLoaded", initTestimonials);
-
 function reinitSwiper() {
   document.querySelectorAll('.init-swiper').forEach(el => {
+
+    // Détruire l'ancien Swiper
     if (el.swiper) {
       el.swiper.destroy(true, true);
     }
+
+    // Lire la config JSON du template
     const configScript = el.querySelector('.swiper-config');
     const config = JSON.parse(configScript.textContent);
+
+    // Recréer Swiper
     new Swiper(el, config);
   });
 }
