@@ -1,5 +1,5 @@
 /* * FICHIER : script.js
- * Gère la Grande Carte, la Mini-Map de sélection et l'ajout dynamique dans la liste.
+ * Gère la Grande Carte, la Mini-Map, l'ajout dynamique et le COMPTEUR d'actions.
  */
 
 // Variables globales
@@ -52,17 +52,16 @@ document.addEventListener("DOMContentLoaded", function() {
             var lat = e.latlng.lat.toFixed(4);
             var lng = e.latlng.lng.toFixed(4);
 
-            // Remplissage des inputs readonly
             var latInput = document.getElementById('inputLat');
             var lngInput = document.getElementById('inputLng');
             
             if (latInput && lngInput) {
                 latInput.value = lat;
                 lngInput.value = lng;
-                document.getElementById('location-feedback').style.display = 'block';
+                var feedback = document.getElementById('location-feedback');
+                if(feedback) feedback.style.display = 'block';
             }
 
-            // Marqueur Rouge visuel
             if (selectionMarker) {
                 miniMap.removeLayer(selectionMarker);
             }
@@ -70,24 +69,47 @@ document.addEventListener("DOMContentLoaded", function() {
             var redIcon = new L.Icon({
                 iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/markers-default/red.png',
                 shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
-                shadowSize: [41, 41]
+                iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
             });
 
             selectionMarker = L.marker([lat, lng], {icon: redIcon}).addTo(miniMap);
             selectionMarker.bindPopup("Position sélectionnée").openPopup();
         });
         
+        // Fix survol (carré gris)
+        miniMapElement.addEventListener('mouseover', function() {
+            miniMap.invalidateSize();
+        });
         setTimeout(function(){ miniMap.invalidateSize(); }, 1000);
     }
+
+    // --- 3. MISE À JOUR INITIALE DU COMPTEUR ---
+    updateCompteur();
 });
 
 
-// --- 3. FONCTIONS GLOBALES ---
+// --- 4. FONCTIONS GLOBALES ---
 
-// Fonction de zoom sur la carte (depuis la liste)
+// NOUVELLE FONCTION : Compte les éléments et met à jour l'affichage
+function updateCompteur() {
+    // On sélectionne tous les items de la liste
+    var items = document.querySelectorAll('.features-list .feature-item');
+    var count = items.length;
+
+    // On sélectionne l'endroit où afficher le chiffre (la classe .years)
+    var counterDisplay = document.querySelector('.experience-box .years');
+    
+    // On met à jour le texte et on ajoute une petite animation
+    if (counterDisplay) {
+        counterDisplay.innerText = count;
+        // Petit effet visuel pour montrer que ça change
+        counterDisplay.style.transition = "transform 0.2s";
+        counterDisplay.style.transform = "scale(1.3)";
+        setTimeout(() => { counterDisplay.style.transform = "scale(1)"; }, 200);
+    }
+}
+
+// Fonction de zoom sur la carte
 function focusMap(lat, lng, title) {
     if (mainMap) {
         mainMap.flyTo([lat, lng], 14, { animate: true, duration: 1.5 });
@@ -96,58 +118,42 @@ function focusMap(lat, lng, title) {
     }
 }
 
-// Fonction PRINCIPALE : Ajoute le point et crée l'élément dans la liste
+// Fonction PRINCIPALE : Ajoute le point
 function ajouterPointSurCarte() {
-    // 1. Récupération des données
     var nom = document.getElementById('inputName').value;
     var lat = document.getElementById('inputLat').value;
     var lng = document.getElementById('inputLng').value;
     var type = document.getElementById('inputType').value;
     var niveau = document.getElementById('inputLevel').value;
-    var dateValue = document.getElementById('inputTime').value; // format: 2025-01-22T14:30
+    var dateValue = document.getElementById('inputTime').value; 
     var orga = document.getElementById('inputOrg').value;
 
-    // 2. Validation
     if (nom === "" || lat === "" || lng === "" || dateValue === "" || orga === "") {
-        alert("Merci de remplir tous les champs (y compris Date et Organisateur) !");
+        alert("Merci de remplir tous les champs !");
         return;
     }
 
     if (!mainMap) return;
 
-    // 3. Formatage pour l'affichage (Date et Icônes)
-    
-    // Date : "2025-01-22T14:30" -> "22/01 à 14:30" (ou format simple)
+    // Formatage Date
     var dateObj = new Date(dateValue);
     var dateFormatted = dateObj.toLocaleDateString('fr-FR', {day: 'numeric', month: 'short'}) + ", " + dateObj.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
 
-    // Choix du style selon le type (Couleurs et Icônes)
+    // Style
     var iconClass = "bi-trash"; 
     var badgeClass = "bg-primary"; 
+    if (type.includes("Urgent")) { iconClass = "bi-exclamation-triangle"; badgeClass = "bg-warning text-dark"; } 
+    else if (type.includes("Sensibilisation")) { iconClass = "bi-info-circle"; badgeClass = "bg-info text-dark"; } 
+    else if (type.includes("Tri")) { iconClass = "bi-recycle"; badgeClass = "bg-success"; } 
+    else if (type.includes("Afterwork")) { iconClass = "bi-cup-straw"; badgeClass = "bg-secondary"; }
 
-    if (type.includes("Urgent")) {
-        iconClass = "bi-exclamation-triangle";
-        badgeClass = "bg-warning text-dark";
-    } else if (type.includes("Sensibilisation")) {
-        iconClass = "bi-info-circle";
-        badgeClass = "bg-info text-dark";
-    } else if (type.includes("Tri")) {
-        iconClass = "bi-recycle";
-        badgeClass = "bg-success";
-    } else if (type.includes("Afterwork")) {
-        iconClass = "bi-cup-straw";
-        badgeClass = "bg-secondary";
-    }
-
-    // 4. Ajout sur la CARTE PRINCIPALE
+    // Ajout Carte
     var newMarker = L.marker([lat, lng]).addTo(mainMap);
     var popupMapContent = `<b>${nom}</b><br>📅 ${dateFormatted}<br><span class="badge ${badgeClass}">${type}</span>`;
     newMarker.bindPopup(popupMapContent).openPopup();
     mainMap.flyTo([lat, lng], 14);
 
-    // 5. CRÉATION ET INJECTION DANS LA LISTE (HTML dynamique)
-    
-    // On construit le bloc HTML exactement comme demandé
+    // Ajout Liste HTML
     var htmlItem = `
         <div class="feature-item cursor-pointer" onclick="focusMap(${lat}, ${lng}, '${nom.replace(/'/g, "\\'")}')">
           <div class="icon-box"><i class="bi ${iconClass}"></i></div>
@@ -159,39 +165,26 @@ function ajouterPointSurCarte() {
         </div>
     `;
 
-    // On l'ajoute tout en haut de la liste
     var listeContainer = document.querySelector('.features-list');
     if(listeContainer) {
         listeContainer.insertAdjacentHTML('afterbegin', htmlItem);
+        
+        // --- MISE À JOUR DU COMPTEUR ---
+        updateCompteur(); // On recalcule le total ici !
     }
 
-    // 6. Feedback et Reset
-    alert("C'est validé ! Votre action est en ligne.");
+    alert("C'est validé !");
     document.getElementById('map-section').scrollIntoView({behavior: 'smooth'});
 
-    // Vider le formulaire pour la suite
+    // Reset Form
     document.getElementById('inputName').value = "";
     document.getElementById('inputLat').value = "";
     document.getElementById('inputLng').value = "";
     document.getElementById('inputTime').value = "";
     document.getElementById('inputOrg').value = "";
     
-    // On enlève le marqueur rouge de la mini-map
     if (selectionMarker) {
         miniMap.removeLayer(selectionMarker);
         selectionMarker = null;
-    }
-
-
-    // --- FIX : Forcer l'affichage de la Mini-Map ---
-    // Parfois la carte reste grise si elle est chargée dans un onglet caché.
-    // Ce bout de code force le rafraichissement dès qu'on passe la souris dessus.
-    var miniMapDiv = document.getElementById('mini-map');
-    if (miniMapDiv) {
-        miniMapDiv.addEventListener('mouseover', function() {
-            if (miniMap) {
-                miniMap.invalidateSize();
-            }
-        });
     }
 }
