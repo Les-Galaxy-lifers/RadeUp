@@ -1,0 +1,215 @@
+{
+  "actions": [
+    {
+      "id": 1,
+      "name": "Ramassage Plage du Minou",
+      "address": {
+        "address": "Plage du Petit Minou",
+        "coordinates": {
+          "lat": 48.357,
+          "lng": -4.613
+        }
+      },
+      "start_date": "2025-03-10",
+      "participants": [1, 3, 7, 12],
+      "creator": 1,
+      "creator_name": "EcoBreizh",
+      "type": "Nettoyage",
+      "difficulty": "Modérée",
+      "comments": [
+        "Belle mobilisation locale.",
+        "Nombreux plastiques collectés."
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Nettoyage du Port de Brest",
+      "address": {
+        "address": "Port de Commerce",
+        "coordinates": {
+          "lat": 48.375,
+          "lng": -4.475
+        }
+      },
+      "start_date": "2025-04-05",
+      "participants": [2, 5, 9],
+      "creator": 4,
+      "creator_name": "EcoBreizh",
+      "type": "Nettoyage",
+      "difficulty": "Modérée",
+      "comments": [
+        "Bonne coordination avec les usagers du port.",
+        "Déchets volumineux retirés."
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Collecte Rade de Brest – Secteur Moulin Blanc",
+      "address": {
+        "address": "Plage du Moulin Blanc",
+        "coordinates": {
+          "lat": 48.39,
+          "lng": -4.45
+        }
+      },
+      "start_date": "2025-06-01",
+      "participants": [6, 11, 14, 20, 25],
+      "creator": 6,
+      "creator_name": "EcoBreizh",
+      "type": "Collecte",
+      "difficulty": "Facile",
+      "comments": [
+        "Collecte organisée avec des familles.",
+        "Tri sélectif effectué sur place."
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Nettoyage Marina du Château",
+      "address": {
+        "address": "Marina du Château",
+        "coordinates": {
+          "lat": 48.383,
+          "lng": -4.492
+        }
+      },
+      "start_date": "2025-02-20",
+      "participants": [8, 10, 13],
+      "creator": 8,
+      "creator_name": "EcoBreizh",
+      "type": "Nettoyage",
+      "difficulty": "Modérée",
+      "comments": [
+        "Beaucoup de déchets liés à la pêche.",
+        "Ambiance conviviale malgré le vent."
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Ramassage Pointe de Saint-Mathieu",
+      "address": {
+        "address": "Pointe de Saint-Mathieu",
+        "coordinates": {
+          "lat": 48.329,
+          "lng": -4.77
+        }
+      },
+      "start_date": "2025-05-10",
+      "participants": [4, 15, 16, 18],
+      "creator": 15,
+      "creator_name": "EcoBreizh",
+      "type": "Nettoyage",
+      "difficulty": "Difficile",
+      "comments": [
+        "Zone très exposée aux déchets marins.",
+        "Biodiversité locale préservée."
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Collecte Anse de Bertheaume",
+      "address": {
+        "address": "Anse de Bertheaume",
+        "coordinates": {
+          "lat": 48.34,
+          "lng": -4.62
+        }
+      },
+      "start_date": "2025-07-03",
+      "participants": [3, 6, 9, 21],
+      "creator": 3,
+      "creator_name": "EcoBreizh",
+      "type": "Collecte",
+      "difficulty": "Modérée",
+      "comments": [
+        "Déchets piégés dans les rochers.",
+        "Participation record."
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Nettoyage Anse de Camaret",
+      "address": {
+        "address": "Anse de Camaret",
+        "coordinates": {
+          "lat": 48.276,
+          "lng": -4.597
+        }
+      },
+      "start_date": "2025-08-01",
+      "participants": [11, 14, 19, 22],
+      "creator": 11,
+      "creator_name": "EcoBreizh",
+      "type": "Nettoyage",
+      "difficulty": "Modérée",
+      "comments": [
+        "Beaucoup de microplastiques collectés.",
+        "Cartographie des zones les plus polluées."
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Réunion des Ambassadeurs du Littoral",
+      "address": {
+        "address": "Préfecture Maritime de l’Atlantique",
+        "coordinates": {
+          "lat": 48.389,
+          "lng": -4.488
+        }
+      },
+      "start_date": "2025-01-15",
+      "participants": [1, 2, 4, 8, 17],
+      "creator": 2,
+      "creator_name": "EcoBreizh",
+      "type": "Réunion",
+      "difficulty": "Facile",
+      "comments": [
+        "Plan d’actions annuel validé.",
+        "Nouveaux bénévoles intégrés."
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Inspection et Ramassage – Port de Commerce",
+      "address": {
+        "address": "Port de Commerce",
+        "coordinates": {
+          "lat": 48.375,
+          "lng": -4.475
+        }
+      },
+      "start_date": "2025-09-05",
+      "participants": [5, 9, 16],
+      "creator": 5,
+      "creator_name": "EcoBreizh",
+      "type": "Inspection",
+      "difficulty": "Modérée",
+      "comments": [
+        "Déchets industriels identifiés.",
+        "Aucun incident signalé."
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Collecte Technologique – Suivi des Déchets",
+      "address": {
+        "address": "La Rade de Brest",
+        "coordinates": {
+          "lat": 48.342,
+          "lng": -4.505
+        }
+      },
+      "start_date": "2025-10-12",
+      "participants": [7, 12, 18, 23, 26],
+      "creator": 7,
+      "creator_name": "EcoBreizh",
+      "type": "Collecte",
+      "difficulty": "Facile",
+      "comments": [
+        "Test d’outils numériques de suivi.",
+        "Cartographie en temps réel réussie."
+      ]
+    }
+  ]
+}
+ 
