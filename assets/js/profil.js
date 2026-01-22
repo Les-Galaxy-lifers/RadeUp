@@ -14,36 +14,23 @@ const badgeLibrary = [
 // 1. FONCTION PRINCIPALE DE CHARGEMENT (FUSIONNÉE)
 // ==========================================
 /**
- * Charge les Utilisateurs ET les Activités, puis lance l'affichage.
+ * Charge les Utilisateurs ET les Activités depuis GitHub uniquement, 
+ * puis lance l'affichage.
  */
 async function initialiserDonnees() {
     try {
-        // --- A. Chargement des Utilisateurs ---
-        const localUsers = localStorage.getItem("usersData");
-        if (localUsers) {
-            usersData = JSON.parse(localUsers);
-            console.log("✅ (1/2) Utilisateurs chargés depuis LocalStorage");
-        } else {
-            const resUser = await fetch("https://raw.githubusercontent.com/Les-Galaxy-lifers/RadeUp/main/BDD/users.json");
-            usersData = await resUser.json();
-            console.log("✅ (1/2) Utilisateurs chargés depuis GitHub");
-        }
+        // --- A. Chargement des Utilisateurs (GitHub) ---
+        const resUser = await fetch("https://raw.githubusercontent.com/Les-Galaxy-lifers/RadeUp/main/BDD/users.json");
+        usersData = await resUser.json(); // On garde la structure complète pour accéder à .bénévoles plus tard
+        console.log("✅ (1/2) Utilisateurs chargés depuis GitHub");
 
-        // --- B. Chargement des Activités (data.json) ---
-        const localActions = localStorage.getItem("actionsData");
-        if (localActions) {
-            const parsedActions = JSON.parse(localActions);
-            actionsData = parsedActions.actions; // Extraction de la clé .actions
-            console.log("✅ (2/2) Activités chargées depuis LocalStorage");
-        } else {
-            const resAction = await fetch("https://raw.githubusercontent.com/Les-Galaxy-lifers/RadeUp/main/BDD/data.json");
-            const jsonAction = await resAction.json();
-            actionsData = jsonAction.actions; // Extraction de la clé .actions
-            console.log("✅ (2/2) Activités chargées depuis GitHub");
-        }
+        // --- B. Chargement des Activités (GitHub) ---
+        const resAction = await fetch("https://raw.githubusercontent.com/Les-Galaxy-lifers/RadeUp/main/BDD/data.json");
+        const jsonAction = await resAction.json();
+        actionsData = jsonAction.actions; // Extraction directe du tableau 'actions'
+        console.log("✅ (2/2) Activités chargées depuis GitHub");
 
         // --- C. Lancement de l'affichage ---
-        // Maintenant que tout est chargé, on peut afficher sans risque
         afficherProfil();
         afficherActivites();
 
