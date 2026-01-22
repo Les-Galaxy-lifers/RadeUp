@@ -344,206 +344,68 @@
 
     </section><!-- /Steps Section -->
 
-    <!-- Testimonials Section -->
-    <section id="testimonials" class="testimonials section light-background">
 
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <span class="description-title">Témoignages</span>
-        <h2>Témoignages</h2>
-        <p>Voici ce que disent nos bénévoles après la réalisation de leurs projets</p>
-      </div><!-- End Section Title -->
+////////////////////////////////////
+<!-- Temoignage Section -->
+<section id="testimonials" class="testimonials section light-background">
 
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
+  <!-- Section Title -->
+  <div class="container section-title" data-aos="fade-up">
+    <span class="description-title">Témoignages</span>
+    <h2>Témoignages</h2>
+    <p>Voici ce que disent nos bénévoles après la réalisation de leurs projets</p>
+  </div><!-- End Section Title -->
 
-        <div class="testimonials-slider swiper init-swiper">
-          <script type="application/json" class="swiper-config">
-            {
-              "loop": true,
-              "speed": 800,
-              "autoplay": {
-                "delay": 5000
-              },
-              "slidesPerView": 1,
-              "spaceBetween": 30,
-              "pagination": {
-                "el": ".swiper-pagination",
-                "type": "bullets",
-                "clickable": true
-              },
-              "breakpoints": {
-                "768": {
-                  "slidesPerView": 2
-                },
-                "1200": {
-                  "slidesPerView": 3
-                }
-              }
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+    <div class="testimonials-slider swiper init-swiper">
+      <script type="application/json" class="swiper-config">
+        {
+          "loop": true,
+          "speed": 800,
+          "autoplay": {
+            "delay": 5000
+          },
+          "slidesPerView": 1,
+          "spaceBetween": 30,
+          "pagination": {
+            "el": ".swiper-pagination",
+            "type": "bullets",
+            "clickable": true
+          },
+          "breakpoints": {
+            "768": {
+              "slidesPerView": 2
+            },
+            "1200": {
+              "slidesPerView": 3
             }
-          </script>
-          <div class="swiper-wrapper">
-            <div class="swiper-slide">
-              <div class="testimonial-card">
-                <div class="testimonial-content">
-                  <p>
-                    <i class="bi bi-quote quote-icon"></i>
-                    Enfin un outil clair pour savoir où agir ! J'ai trouvé une collecte à la pointe du Petit Minou en deux clics. L'interface est super intuitive
-                  </p>
-                </div>
-                <div class="testimonial-profile">
-                  <div class="rating">
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star"></i>
-                  </div>
-                  <div class="profile-info">
-                    <img src="assets/img/person/person-m-8.webp" alt="Profile Image">
-                    <div>
-                      <h3>Robert Johnson</h3>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div><!-- End testimonial item -->
+          }
+        }
+      </script>
 
-            <div class="swiper-slide">
-              <div class="testimonial-card">
-                <div class="testimonial-content">
-                  <p>
-                    <i class="bi bi-quote quote-icon"></i>
-                    Top pour organiser mes propres sorties. J'ai pu créer un événement pour le week-end prochain à Plougastel et déjà 10 personnes se sont inscrites !
-                  </p>
-                </div>
-                <div class="testimonial-profile">
-                  <div class="rating">
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                  </div>
-                  <div class="profile-info">
-                    <img src="assets/img/person/person-f-3.webp" alt="Profile Image">
-                    <div>
-                      <h3>Lisa Williams</h3>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div><!-- End testimonial item -->
+      <!-- 🔽 SLIDES GÉNÉRÉES PAR JAVASCRIPT -->
+      <div class="swiper-wrapper" id="testimonials-wrapper"></div>
 
-            <div class="swiper-slide">
-              <div class="testimonial-card">
-                <div class="testimonial-content">
-                  <p>
-                    <i class="bi bi-quote quote-icon"></i>
-                    Une superbe initiative pour rencontrer ses voisins tout en faisant une bonne action pour nos plages. Bravo à l'association !
-                  </p>
-                </div>
-                <div class="testimonial-profile">
-                  <div class="rating">
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                  </div>
-                  <div class="profile-info">
-                    <img src="assets/img/person/person-f-10.webp" alt="Profile Image">
-                    <div>
-                      <h3>Emma Parker</h3>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div><!-- End testimonial item -->
+      <div class="swiper-pagination"></div>
+    </div>
 
-            <div class="swiper-slide">
-              <div class="testimonial-card">
-                <div class="testimonial-content">
-                  <p>
-                    <i class="bi bi-quote quote-icon"></i>
-                    On a monté un groupe avec des amis de la fac via la plateforme. C'est motivant de voir la communauté s'agrandir de jour en jour.
-                  </p>
-                </div>
-                <div class="testimonial-profile">
-                  <div class="rating">
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star"></i>
-                  </div>
-                  <div class="profile-info">
-                    <img src="assets/img/person/person-m-5.webp" alt="Profile Image">
-                    <div>
-                      <h3>David Miller</h3>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div><!-- End testimonial item -->
+  </div>
 
-            <div class="swiper-slide">
-              <div class="testimonial-card">
-                <div class="testimonial-content">
-                  <p>
-                    <i class="bi bi-quote quote-icon"></i>
-                    J'ai pu signaler un amas de plastiques près du pont de l'Iroise. Le signalement a été pris en compte rapidement par une équipe locale. Très efficace.
-                  </p>
-                </div>
-                <div class="testimonial-profile">
-                  <div class="rating">
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star"></i>
-                  </div>
-                  <div class="profile-info">
-                    <img src="assets/img/person/person-m-2.webp" alt="Profile Image">
-                    <div>
-                      <h3>Michael Davis</h3>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div><!-- End testimonial item -->
+</section><!-- /Temoignage Section -->
 
-            <div class="swiper-slide">
-              <div class="testimonial-card">
-                <div class="testimonial-content">
-                  <p>
-                    <i class="bi bi-quote quote-icon"></i>
-                    Le récapitulatif des kilos de déchets ramassés après chaque action est hyper gratifiant. On voit concrètement l'impact de nos efforts sur la Rade.
-                  </p>
-                </div>
-                <div class="testimonial-profile">
-                  <div class="rating">
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                  </div>
-                  <div class="profile-info">
-                    <img src="assets/img/person/person-f-7.webp" alt="Profile Image">
-                    <div>
-                      <h3>Sarah Thompson</h3>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div><!-- End testimonial item -->
-          </div>
-          <div class="swiper-pagination"></div>
-        </div>
+/////////////////////////////////////////
 
-      </div>
 
-    </section><!-- /Testimonials Section -->
+
+
+
+
+
+
+
+
+
 
 
     <!-- Portfolio Section -->
@@ -1039,6 +901,7 @@
 
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
+  <script src="assets/js/temoignage.js"></script>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
