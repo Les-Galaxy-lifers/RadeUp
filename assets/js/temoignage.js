@@ -31,13 +31,13 @@ function genererTemoignages() {
 
   actionsData.forEach(action => {
     if (!action.comments) return;
-
+    console.log(usersData);
     action.comments.forEach(comment => {
       const user = usersData.find(u => u.id === action.creator);
 
       const slide = document.createElement("div");
       slide.className = "swiper-slide";
-
+      console.log(user.image);
       slide.innerHTML = `
         <div class="testimonial-card">
           <div class="testimonial-content">
@@ -57,7 +57,7 @@ function genererTemoignages() {
             </div>
 
             <div class="profile-info">
-              <img src="${user?.image || 'assets/img/person/default.webp'}"
+              <img src="${user?.image}"
                    alt="Profile Image">
               <div>
                 <h3>
