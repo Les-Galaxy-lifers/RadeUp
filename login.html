@@ -810,7 +810,7 @@
               <h3 class="text-center" >Envoyez-nous un message</h3>
               <p>Si vous avez la moindre question, renseigner vos coordonnées et le sujet de votre demande et nous la traiterons dans les meilleurs délais.</p>
 
-              <form action="forms/contact.js" method="post" class="php-email-form">
+              <form action="#" method="post" id="contactForm">
                 <div class="form-floating mb-3">
                   <input type="text" class="form-control" id="nameInput" name="name" placeholder="Full Name" required="">
                   <label for="nameInput">Nom Prénom</label>
@@ -830,13 +830,7 @@
                   <textarea class="form-control" id="messageInput" name="message" rows="5" placeholder="Your Message" style="height: 150px" required=""></textarea>
                   <label for="messageInput">Votre message</label>
                 </div>
-
-                <div class="my-3">
-                  <div class="loading">Chargement</div>
-                  <div class="error-message"></div>
-                  <div class="sent-message">Message envoyé. Merci !</div>
-                </div>
-
+                <div class="sent-message alert alert-success" style="display: none;">Votre message a été envoyé. Merci !</div>
                 <div class="d-grid">
                   <button type="submit" class="btn-submit">Envoyez le message <i class="bi bi-send-fill ms-2"></i></button>
                 </div>
@@ -908,7 +902,35 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
   <script src="script.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('contactForm');
+    const messageDiv = form.querySelector('.sent-message');
 
+    form.addEventListener('submit', function(event) {
+      // 1. Empêche l'envoi réel du formulaire (qui causerait une erreur ou un rechargement)
+      event.preventDefault();
+
+      // 2. Simule un petit chargement (optionnel) puis affiche le message
+      const btn = form.querySelector('button[type="submit"]');
+      const originalText = btn.innerText;
+      btn.innerText = 'Envoi en cours...';
+      btn.disabled = true;
+
+      setTimeout(() => {
+        // Affiche le message "Message envoyé"
+        messageDiv.style.display = 'block';
+        
+        // Remet le bouton à la normale
+        btn.innerText = originalText;
+        btn.disabled = false;
+
+        // Optionnel : Vide le formulaire après l'envoi
+        form.reset();
+      }, 1000); // Délai de 1 seconde pour l'effet visuel
+    });
+  });
+</script>
   <style>
     .cursor-pointer { cursor: pointer; transition: 0.3s; }
   </style>
