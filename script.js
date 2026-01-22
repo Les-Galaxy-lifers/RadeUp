@@ -199,14 +199,32 @@ function updateCompteur() {
 }
 
 // MODIFICATION IMPORTANTE ICI : On enregistre la sélection
+// MODIFICATION : Ouvre la VRAIE bulle du marqueur
 function focusMap(lat, lng, title) {
-    // 1. On mémorise la mission choisie
+    // 1. On mémorise la mission choisie (pour l'inscription)
     missionSelectionnee = title;
     
-    // 2. Comportement habituel (Zoom)
     if (mainMap) {
+        // 2. On zoome vers le point
         mainMap.flyTo([lat, lng], 14, { animate: true, duration: 1.5 });
-        L.popup().setLatLng([lat, lng]).setContent("<b>" + title + "</b>").openOn(mainMap);
+        
+        // 3. On cherche le marqueur correspondant sur la carte pour l'ouvrir
+        // On parcourt tous les calques de la carte
+        mainMap.eachLayer(function(layer) {
+            // Si le calque est un Marqueur ET qu'il a des coordonnées
+            if (layer instanceof L.Marker && layer.getLatLng) {
+                var markerLoc = layer.getLatLng();
+                
+                // On compare les coordonnées (avec une petite marge d'erreur pour les décimales)
+                // Si ça correspond à notre clic dans la liste...
+                if (Math.abs(markerLoc.lat - lat) < 0.0001 && Math.abs(markerLoc.lng - lng) < 0.0001) {
+                    // ... On ouvre SA bulle (qui contient déjà toutes les infos complètes)
+                    layer.openPopup();
+                }
+            }
+        });
+
+        // 4. On scroll vers la carte
         document.getElementById('map-section').scrollIntoView({behavior: 'smooth', block: 'center'});
     }
 }
