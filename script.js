@@ -8,7 +8,7 @@ var mainMap = null;
 var miniMap = null;
 var selectionMarker = null;
 
-// Variable pour l'inscription
+// Variable pour l'inscription (Retient la mission cliquée)
 var missionSelectionnee = null; 
 
 // REGISTRE DES MARQUEURS (Important pour lier la liste à la carte)
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function() {
         setTimeout(function(){ mainMap.invalidateSize(); }, 500);
     }
 
-    // --- 2. INITIALISATION MINI-MAP (Formulaire) ---
+    // --- 2. INITIALISATION MINI-MAP (Formulaire "Proposer un spot") ---
     var miniMapElement = document.getElementById('mini-map');
     if (miniMapElement) {
         miniMap = L.map('mini-map').setView([48.35, -4.48], 10);
@@ -41,22 +41,27 @@ document.addEventListener("DOMContentLoaded", function() {
             var lat = e.latlng.lat.toFixed(4);
             var lng = e.latlng.lng.toFixed(4);
             
-            // Remplissage automatique des champs
+            // Remplissage automatique des champs latitude/longitude
             document.getElementById('inputLat').value = lat;
             document.getElementById('inputLng').value = lng;
             
             var fb = document.getElementById('location-feedback');
             if(fb) fb.style.display = 'block';
 
-            // Gestion du marqueur rouge
+            // Gestion du marqueur sur la mini-carte
             if (selectionMarker) miniMap.removeLayer(selectionMarker);
             
-            var redIcon = new L.Icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/markers-default/red.png',
+            // --- MODIFICATION : Marqueur VERT pour la proposition de lieu ---
+            var customIcon = new L.Icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/markers-default/green.png',
                 shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+                iconSize: [25, 41], 
+                iconAnchor: [12, 41], 
+                popupAnchor: [1, -34], 
+                shadowSize: [41, 41]
             });
-            selectionMarker = L.marker([lat, lng], {icon: redIcon}).addTo(miniMap);
+            
+            selectionMarker = L.marker([lat, lng], {icon: customIcon}).addTo(miniMap);
         });
         
         miniMapElement.addEventListener('mouseover', function() { miniMap.invalidateSize(); });
@@ -138,7 +143,7 @@ function afficherEvenement(event) {
         }
     }
 
-    // Couleurs et Icônes
+    // Couleurs et Icônes selon le type
     var iconClass = "bi-trash"; 
     var badgeClass = "bg-primary"; 
     if (type.includes("Urgent")) { iconClass = "bi-exclamation-triangle"; badgeClass = "bg-warning text-dark"; } 
@@ -161,7 +166,7 @@ function afficherEvenement(event) {
         missionSelectionnee = title;
     });
 
-    // IMPORTANT : On sauvegarde le marqueur dans le registre
+    // IMPORTANT : On sauvegarde le marqueur dans le registre pour le retrouver via la liste
     markersList[title] = marker;
 
     // --- B. CRÉATION ÉLÉMENT LISTE ---
@@ -226,7 +231,7 @@ function ajouterPointSurCarte() {
     loadEvents(); // On recharge tout
     document.getElementById('map-section').scrollIntoView({behavior: 'smooth'});
 
-    // 5. Reset
+    // 5. Reset du formulaire
     document.getElementById('inputName').value = "";
     document.getElementById('inputLat').value = "";
     document.getElementById('inputLng').value = "";
@@ -286,18 +291,18 @@ function gererInscription() {
 }
 
 
-
-
-/* --- GESTION DU BOUTON ALERTER --- */
+/* --- GESTION DU BOUTON ALERTER (MODALE ROUGE) --- */
 
 // Ouvrir le formulaire
 function ouvrirModalAlerte() {
-    document.getElementById("modalAlerte").style.display = "flex";
+    var modal = document.getElementById("modalAlerte");
+    if(modal) modal.style.display = "flex";
 }
 
 // Fermer le formulaire
 function fermerModalAlerte() {
-    document.getElementById("modalAlerte").style.display = "none";
+    var modal = document.getElementById("modalAlerte");
+    if(modal) modal.style.display = "none";
 }
 
 // Simuler l'envoi de l'alerte
@@ -305,7 +310,7 @@ function envoyerAlerte(event) {
     // Empêche la page de se recharger
     event.preventDefault();
     
-    // Récupération (pour l'exemple)
+    // Récupération
     var loc = document.getElementById('alerteLocalisation').value;
     
     // Fermer la modale
@@ -318,11 +323,11 @@ function envoyerAlerte(event) {
     document.getElementById('formAlerte').reset();
 }
 
-// Fermeture universelle au clic en dehors (Mise à jour si tu l'as déjà)
+// Fermeture universelle au clic en dehors du cadre
 window.onclick = function(event) {
     var modalAlerte = document.getElementById("modalAlerte");
-    // Si tu as d'autres modales, ajoute-les ici avec des conditions OU (||)
-    if (event.target == modalAlerte) {
+    // Si on clique sur le fond gris de la modale Alerte
+    if (modalAlerte && event.target == modalAlerte) {
         modalAlerte.style.display = "none";
     }
 }
