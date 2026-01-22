@@ -7,19 +7,19 @@ var mainMap = null;
 var miniMap = null;
 var selectionMarker = null;
 
+// --- NOUVELLE VARIABLE : Pour retenir le choix de l'utilisateur ---
+var missionSelectionnee = null; 
+
 document.addEventListener("DOMContentLoaded", function() {
     
     // --- 1. INITIALISATION CARTE PRINCIPALE ---
     var mainMapElement = document.getElementById('map');
     
     if (mainMapElement) {
-        // Centrage sur la Rade de Brest
         mainMap = L.map('map').setView([48.35, -4.48], 11);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(mainMap);
 
-        // Chargement des données (JSON + LocalStorage)
         loadEvents();
-        
         setTimeout(function(){ mainMap.invalidateSize(); }, 500);
     }
 
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var miniMapElement = document.getElementById('mini-map');
     if (miniMapElement) {
         miniMap = L.map('mini-map').setView([48.35, -4.48], 10);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(miniMap);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(mainMap);
 
         miniMap.on('click', function(e) {
             var lat = e.latlng.lat.toFixed(4);
@@ -51,10 +51,13 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-// --- FONCTION CŒUR : CHARGEMENT HYBRIDE ---
+// --- CHARGEMENT HYBRIDE ---
 function loadEvents() {
-    // 1. Nettoyage de l'interface
+    // Nettoyage de l'interface (Attention: cela efface le HTML en dur si présent)
     var listeContainer = document.querySelector('.features-list');
+    
+    // Si la liste est vide (pas de HTML en dur), on ne fait rien, sinon on la vide pour le chargement JS
+    // Pour ton cas, si tu veux garder le HTML en dur + le JSON, commente la ligne ci-dessous :
     if(listeContainer) listeContainer.innerHTML = "";
     
     if(mainMap) {
@@ -64,7 +67,6 @@ function loadEvents() {
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(mainMap);
     }
 
-    // 2. Charger les données du fichier JSON (Le "Socle")
     fetch('BDD/data.json')
         .then(response => response.json())
         .then(data => {
@@ -73,21 +75,16 @@ function loadEvents() {
                     afficherEvenement(event);
                 });
             }
-            
-            // 3. Charger les données du LocalStorage (Les "Ajouts")
             chargerDonneesLocales();
-            
             updateCompteur();
         })
         .catch(error => {
             console.error("Erreur JSON (ou fichier absent):", error);
-            // Si le JSON plante, on charge quand même le local
             chargerDonneesLocales();
             updateCompteur();
         });
 }
 
-// Fonction pour lire la mémoire du navigateur
 function chargerDonneesLocales() {
     var saved = localStorage.getItem('myHybridEvents');
     if (saved) {
@@ -97,9 +94,8 @@ function chargerDonneesLocales() {
 }
 
 
-// --- AFFICHAGE UNIFIÉ ---
+// --- AFFICHAGE ---
 function afficherEvenement(event) {
-    // Protection contre les données incomplètes
     if (!event.address || !event.address.coordinates) return;
 
     var lat = event.address.coordinates.lat;
@@ -110,40 +106,32 @@ function afficherEvenement(event) {
     var level = event.difficulty || "Tous niveaux";
     var nbParticipants = event.participants ? event.participants.length : 0;
 
-    // Gestion de la Date et de l'Heure
     var dateFormatted = "Date à définir";
-    
     if (event.start_date) {
         var dateObj = new Date(event.start_date);
-
-        // Vérification de sécurité : est-ce une date valide ?
         if (!isNaN(dateObj.getTime())) {
-            // Exemple de résultat : "25 mars à 14:30"
             dateFormatted = dateObj.toLocaleDateString('fr-FR', {day: 'numeric', month: 'short'}) + 
                             " à " + 
                             dateObj.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
         }
     }
 
-    // Couleurs et Icônes
     var iconClass = "bi-trash"; 
     var badgeClass = "bg-primary"; 
     if (type.includes("Urgent")) { iconClass = "bi-exclamation-triangle"; badgeClass = "bg-warning text-dark"; } 
     else if (type.includes("Sensibilisation")) { iconClass = "bi-info-circle"; badgeClass = "bg-info text-dark"; } 
     else if (type.includes("Tri")) { iconClass = "bi-recycle"; badgeClass = "bg-success"; }
 
-    // A. Marqueur sur la carte
+    // On s'assure que le clic sur le marqueur sélectionne aussi la mission
     var marker = L.marker([lat, lng]).addTo(mainMap);
-    var popupContent = `
-        <b>${title}</b><br>
-        📍 ${event.address.address}<br>
-        📅 ${dateFormatted}<br>
-        👥 ${nbParticipants} participants<br>
-        <span class="badge ${badgeClass}">${type}</span>
-    `;
+    var popupContent = `<b>${title}</b><br>📅 ${dateFormatted}<br><span class="badge ${badgeClass}">${type}</span>`;
     marker.bindPopup(popupContent);
+    
+    // Ajout d'un événement clic sur le marqueur pour sélectionner la mission
+    marker.on('click', function() {
+        missionSelectionnee = title; // On retient le titre
+    });
 
-    // B. Élément dans la liste
     var htmlItem = `
         <div class="feature-item cursor-pointer" onclick="focusMap(${lat}, ${lng}, '${title.replace(/'/g, "\\'")}')">
           <div class="icon-box"><i class="bi ${iconClass}"></i></div>
@@ -159,10 +147,8 @@ function afficherEvenement(event) {
     if(listeContainer) listeContainer.insertAdjacentHTML('beforeend', htmlItem);
 }
 
-
-// --- AJOUT D'UN POINT (SAUVEGARDE LOCALE) ---
+// --- AJOUT D'UN POINT ---
 function ajouterPointSurCarte() {
-    // 1. Récupération du formulaire
     var nom = document.getElementById('inputName').value;
     var lat = document.getElementById('inputLat').value;
     var lng = document.getElementById('inputLng').value;
@@ -175,16 +161,9 @@ function ajouterPointSurCarte() {
         alert("Merci de remplir tous les champs !"); return;
     }
 
-    // 2. Création de l'objet (Structure IDENTIQUE au JSON)
     var newEvent = {
         name: nom,
-        address: {
-            address: "Lieu ajouté (Local)",
-            coordinates: {
-                lat: parseFloat(lat),
-                lng: parseFloat(lng)
-            }
-        },
+        address: { address: "Lieu ajouté (Local)", coordinates: { lat: parseFloat(lat), lng: parseFloat(lng) } },
         start_date: dateValue,
         participants: [],
         creator_name: orga,
@@ -192,20 +171,15 @@ function ajouterPointSurCarte() {
         difficulty: niveau
     };
 
-    // 3. Sauvegarde dans le LocalStorage (La magie)
     var existingEvents = localStorage.getItem('myHybridEvents');
     var eventsArray = existingEvents ? JSON.parse(existingEvents) : [];
-    
     eventsArray.push(newEvent);
-    
     localStorage.setItem('myHybridEvents', JSON.stringify(eventsArray));
 
-    // 4. Feedback
     alert("✅ Action ajoutée avec succès !");
-    loadEvents(); // On recharge tout pour voir le nouveau point
+    loadEvents(); 
     document.getElementById('map-section').scrollIntoView({behavior: 'smooth'});
 
-    // 5. Reset
     document.getElementById('inputName').value = "";
     document.getElementById('inputLat').value = "";
     document.getElementById('inputLng').value = "";
@@ -214,24 +188,38 @@ function ajouterPointSurCarte() {
     if (selectionMarker) { miniMap.removeLayer(selectionMarker); selectionMarker = null; }
 }
 
+// --- GLOBALES & LOGIQUE D'INSCRIPTION ---
 
-// --- GLOBALES ---
 function updateCompteur() {
     var count = document.querySelectorAll('.features-list .feature-item').length;
     var display = document.querySelector('.experience-box .years');
     if (display) {
         display.innerText = count;
-        // Animation pop
-        display.style.transition = "transform 0.2s";
-        display.style.transform = "scale(1.3)";
-        setTimeout(() => { display.style.transform = "scale(1)"; }, 200);
     }
 }
 
+// MODIFICATION IMPORTANTE ICI : On enregistre la sélection
 function focusMap(lat, lng, title) {
+    // 1. On mémorise la mission choisie
+    missionSelectionnee = title;
+    
+    // 2. Comportement habituel (Zoom)
     if (mainMap) {
         mainMap.flyTo([lat, lng], 14, { animate: true, duration: 1.5 });
         L.popup().setLatLng([lat, lng]).setContent("<b>" + title + "</b>").openOn(mainMap);
         document.getElementById('map-section').scrollIntoView({behavior: 'smooth', block: 'center'});
+    }
+}
+
+// NOUVELLE FONCTION : Vérification de l'inscription
+function gererInscription() {
+    if (missionSelectionnee === null) {
+        // Cas 1 : Rien n'est sélectionné
+        alert("⚠️ Veuillez d'abord sélectionner une mission dans la liste ou sur la carte.");
+    } else {
+        // Cas 2 : Une mission est sélectionnée
+        alert("✅ Félicitations !\n\nVous êtes bien inscrit à la mission :\n" + missionSelectionnee + "\n\nVous recevrez les détails par mail.");
+        // Optionnel : On peut remettre à zéro après l'inscription
+        // missionSelectionnee = null; 
     }
 }

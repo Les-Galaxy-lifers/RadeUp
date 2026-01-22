@@ -193,7 +193,6 @@
               <p class="highlight-text">Sélectionnez un événement ci-dessous pour voir le point de rendez-vous sur la carte.</p>
 
               <div class="features-list" style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
-                
                 <div class="feature-item cursor-pointer" onclick="focusMap(48.3908, -4.4357, 'Plage du Moulin Blanc')">
                   <div class="icon-box"><i class="bi bi-calendar-event"></i></div>
                   <div class="text">
@@ -202,47 +201,11 @@
                     <span class="badge bg-primary">Nettoyage</span> <small>Niveau: Facile</small></p>
                   </div>
                 </div>
-
-                <div class="feature-item cursor-pointer" onclick="focusMap(48.3394, -4.6122, 'Pointe du Petit Minou')">
-                  <div class="icon-box"><i class="bi bi-exclamation-triangle"></i></div>
-                  <div class="text">
-                    <h4>Pointe du Petit Minou</h4>
-                    <p><strong>Samedi, 10h00</strong> - Org: Surfrider 29<br>
-                    <span class="badge bg-warning text-dark">Urgent</span> <small>Niveau: Difficile</small></p>
-                  </div>
                 </div>
 
-                <div class="feature-item cursor-pointer" onclick="focusMap(48.3765, -4.3640, 'Port de Plougastel')">
-                  <div class="icon-box"><i class="bi bi-geo-alt"></i></div>
-                  <div class="text">
-                    <h4>Port de Plougastel</h4>
-                    <p><strong>Dimanche, 09h30</strong> - Org: Mairie<br>
-                    <span class="badge bg-success">Tri sélectif</span> <small>Famille bienvenue</small></p>
-                  </div>
-                </div>
-
-                <div class="feature-item cursor-pointer" onclick="focusMap(48.2754, -4.5977, 'Anse de Camaret')">
-                  <div class="icon-box"><i class="bi bi-water"></i></div>
-                  <div class="text">
-                    <h4>Anse de Camaret</h4>
-                    <p><strong>25 Jan, 14h00</strong> - Org: Lycée Naval<br>
-                    <span class="badge bg-info text-dark">Sensibilisation</span></p>
-                  </div>
-                </div>
-
-                <div class="feature-item cursor-pointer" onclick="focusMap(48.3585, -4.5705, 'Technopôle Brest-Iroise')">
-                  <div class="icon-box"><i class="bi bi-calendar-check"></i></div>
-                  <div class="text">
-                    <h4>Plouzané - Technopôle</h4>
-                    <p><strong>26 Jan, 17h00</strong> - Org: BDE ENIB<br>
-                    <span class="badge bg-primary">Afterwork Clean</span></p>
-                  </div>
-                </div>
-
-              </div>
               <div class="cta-buttons">
                 <a href="#steps" class="btn-learn-more">Proposer un lieu</a>
-                <a href="#" class="btn-get-started">M'inscrire</a>
+                <a href="javascript:void(0)" class="btn-get-started" onclick="gererInscription()">M'inscrire</a>
               </div>
             </div>
           </div>

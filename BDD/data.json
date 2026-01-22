@@ -17,8 +17,7 @@
       "type": "Nettoyage",
       "difficulty": "Modérée",
       "comments": [
-        "Belle mobilisation locale.",
-        "Nombreux plastiques collectés."
+        "Enfin un outil clair pour savoir où agir ! J'ai trouvé une collecte à la pointe du Petit Minou en deux clics. L'interface est super intuitive."
       ]
     },
     {
@@ -38,8 +37,7 @@
       "type": "Nettoyage",
       "difficulty": "Modérée",
       "comments": [
-        "Bonne coordination avec les usagers du port.",
-        "Déchets volumineux retirés."
+        "Bonne coordination avec les usagers du port."
       ]
     },
     {
@@ -59,8 +57,7 @@
       "type": "Collecte",
       "difficulty": "Facile",
       "comments": [
-        "Collecte organisée avec des familles.",
-        "Tri sélectif effectué sur place."
+        "Collecte organisée avec des membres de la famille, génial pour passer du temps ensemble tout en faisant un bon geste"
       ]
     },
     {
@@ -80,7 +77,6 @@
       "type": "Nettoyage",
       "difficulty": "Modérée",
       "comments": [
-        "Beaucoup de déchets liés à la pêche.",
         "Ambiance conviviale malgré le vent."
       ]
     },
@@ -101,8 +97,7 @@
       "type": "Nettoyage",
       "difficulty": "Difficile",
       "comments": [
-        "Zone très exposée aux déchets marins.",
-        "Biodiversité locale préservée."
+        "Zone pleine de déchets plastique, on se demande ce que fait la ville..."
       ]
     },
     {
@@ -122,8 +117,7 @@
       "type": "Collecte",
       "difficulty": "Modérée",
       "comments": [
-        "Déchets piégés dans les rochers.",
-        "Participation record."
+        "Top pour organiser mes propres sorties. J'ai pu créer un événement pour le week-end prochain à Plougastel et déjà 10 personnes se sont inscrites !"
       ]
     },
     {
@@ -143,8 +137,7 @@
       "type": "Nettoyage",
       "difficulty": "Modérée",
       "comments": [
-        "Beaucoup de microplastiques collectés.",
-        "Cartographie des zones les plus polluées."
+        "Une superbe initiative pour rencontrer ses voisins tout en faisant une bonne action pour nos plages. Bravo à l'association !"
       ]
     },
     {
@@ -164,8 +157,7 @@
       "type": "Réunion",
       "difficulty": "Facile",
       "comments": [
-        "Plan d’actions annuel validé.",
-        "Nouveaux bénévoles intégrés."
+        "J'ai pu signaler un amas de plastiques près du pont de l'Iroise. Le signalement a été pris en compte rapidement par une équipe locale. Très efficace."
       ]
     },
     {
@@ -185,8 +177,7 @@
       "type": "Inspection",
       "difficulty": "Modérée",
       "comments": [
-        "Déchets industriels identifiés.",
-        "Aucun incident signalé."
+        "Le récapitulatif des kilos de déchets ramassés après chaque action est hyper gratifiant. On voit concrètement l'impact de nos efforts sur la Rade."
       ]
     },
     {
@@ -206,8 +197,7 @@
       "type": "Collecte",
       "difficulty": "Facile",
       "comments": [
-        "Test d’outils numériques de suivi.",
-        "Cartographie en temps réel réussie."
+        "On a monté un groupe avec des amis de la fac via la plateforme. C'est motivant de voir la communauté s'agrandir de jour en jour."
       ]
     }
   ]
