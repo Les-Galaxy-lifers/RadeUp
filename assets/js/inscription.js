@@ -29,6 +29,6 @@ chargerUtilisateurs().then(() => {
         alert("✅ Inscription réussie ! Vous pouvez maintenant vous connecter.");
         
         // Redirection vers la page de connexion
-        window.location.href = "login.html";
+        window.location.href = "index.html";
     });
 });
