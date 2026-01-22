@@ -110,13 +110,22 @@ function afficherEvenement(event) {
     var level = event.difficulty || "Tous niveaux";
     var nbParticipants = event.participants ? event.participants.length : 0;
 
-    // Date et Heure
+    // Gestion Date (Compatible Format Date Machine ET Texte Libre)
     var dateFormatted = "Date à définir";
-    if(event.start_date) {
+    
+    if (event.start_date) {
         var dateObj = new Date(event.start_date);
-        dateFormatted = dateObj.toLocaleDateString('fr-FR', {day: 'numeric', month: 'short'}) + 
-                        " à " + 
-                        dateObj.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
+        
+        // On vérifie si c'est une date valide (ex: "2025-03-10")
+        if (!isNaN(dateObj.getTime())) {
+            // C'est une vraie date -> On la formate (10 mars à 14:00)
+            dateFormatted = dateObj.toLocaleDateString('fr-FR', {day: 'numeric', month: 'short'}) + 
+                            " à " + 
+                            dateObj.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
+        } else {
+            // Ce n'est pas une date valide (ex: "Demain après-midi") -> On affiche le texte tel quel
+            dateFormatted = event.start_date;
+        }
     }
 
     // Couleurs et Icônes
