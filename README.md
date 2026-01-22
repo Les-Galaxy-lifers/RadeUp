@@ -2,6 +2,8 @@
 
 De Plouzané à Plougastel-Daoulas, rejoins le mouvement. Transforme chaque balade en mission pour l'océan. Repère les déchets, crée ton équipe, et nettoie le littoral brestois.
 
+Lien du site : [RadeUp](https://les-galaxy-lifers.github.io/RadeUp/)
+
 ### Séance 1 : Création de "User Stories" afin de cibler les éléments à implémenter
 
 Dans un premier temps, l'objectif a été de définir les objectifs du projet. Ceux-ci étants quasiment fixer dans le contexte de l'exercice, la majorité de notre Story Mapping s'est centré sur : *Comment rendre notre application*, ici web, *aussi accessible que possible ?*
@@ -61,7 +63,7 @@ RadeUp est une application web statique hébergée sur GitHub Pages. Dû à la c
 
 Nous avons structuré le site autour d'une page principale en utilisant :
 
-* HTML5 pour le squelett;
+* HTML5 pour le squelette;
 * CSS3 pour le style;
 * JavaScript pour l’interactivité,
 * Des fichiers JSON pour simuler les données (actions, bénévoles).
