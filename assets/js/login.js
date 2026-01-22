@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (user) {
             console.log("✅ Utilisateur trouvé :", user);
             localStorage.setItem("user", JSON.stringify(user));
-            window.location.href = "index.html";
+            window.location.href = "login.html";
         } else {
             console.log("❌ Aucun utilisateur correspondant");
             alert("❌ Email ou mot de passe incorrect");
