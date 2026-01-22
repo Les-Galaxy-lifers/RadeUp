@@ -1,0 +1,20 @@
+{
+  "actions": [
+    {
+      "user_id": 1,
+      "nom_action": "Développement web",
+      "date_debut": "2026-01-10",
+      "date_fin": "2026-01-12",
+      "duree": "3 jours",
+      "lieu": "Brest"
+    },
+    {
+      "user_id": 2,
+      "nom_action": "Formation cybersécurité",
+      "date_debut": "2026-01-20",
+      "date_fin": "2026-01-25",
+      "duree": "5 jours",
+      "lieu": "En ligne"
+    }
+  ]
+}

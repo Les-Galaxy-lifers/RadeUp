@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/css/login.css">
+</head>
+<body>
+
+<div class="login-container">
+    <h1>Connexion</h1>
+
+    <form id="loginForm">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" required>
+        </div>
+
+        <button type="submit" class="login-btn">Se connecter</button>
+    </form>
+
+    <div class="extra">
+        <p><a href="#">Mot de passe oublié ?</a></p>
+        <p>Pas encore de compte ? <a href="inscription.html">Inscrivez-vous</a></p>
+    </div>
+</div>
+
+<!-- IMPORTANT : users.js AVANT login.js -->
+<script src="BDD/users.js"></script>
+<script src="assets/js/login.js"></script>
+</body>
+</html>
