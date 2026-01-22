@@ -3088,36 +3088,30 @@ section,
 
 
 
-/* --- STYLE DU BOUTON PROFIL ROND --- */
-.btn-profile-rounded {
+/* Style du bouton profil */
+.profile-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    
-    width: 45px;  /* Largeur du rond */
-    height: 45px; /* Hauteur du rond */
-    
-    background-color: var(--accent-color, #0ea2bd); /* Couleur de fond (Bleu thème) */
-    color: white !important; /* Couleur de l'icone */
-    
-    border-radius: 50%; /* C'est ça qui fait le rond parfait */
-    margin-left: 20px;  /* Espace avec le menu Contact */
-    
-    font-size: 20px; /* Taille de l'icone */
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15); /* Légère ombre */
+    text-decoration: none;
+     margin-right: 15px; /* Espace sur mobile */
 }
 
-/* Effet au survol */
-.btn-profile-rounded:hover {
-    transform: scale(1.1); /* Grossit légèrement */
-    background-color: var(--nav-hover-color, #0b8094); /* Foncit un peu */
-    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+.profile-btn i {
+    font-size: 28px; /* Taille de l'icone */
+    color: var(--nav-color); /* Utilise la couleur par défaut du menu */
+    transition: 0.3s;
 }
 
-/* Ajustement pour mobile pour ne pas coller au bouton menu */
-@media (max-width: 1199px) {
-    .btn-profile-rounded {
-        margin-right: 15px;
+/* Changement de couleur au survol (utilise la couleur principale du thème) */
+.profile-btn:hover i {
+    color: var(--nav-hover-color); 
+    transform: scale(1.1); /* Petit effet de zoom sympa */
+}
+
+  /* Ajustement spécifique pour l'ordinateur */
+@media (min-width: 1200px) {
+    .profile-btn {
+      margin-right: 0;
     }
 }
