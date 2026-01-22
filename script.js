@@ -1,5 +1,5 @@
 /* * FICHIER : script.js
- * Chemins mis à jour : BDD/data.json et forms/save_event.php
+ * Compatible avec le format JSON : { "actions": [ ... ] }
  */
 
 var mainMap = null;
@@ -12,10 +12,9 @@ document.addEventListener("DOMContentLoaded", function() {
     var mainMapElement = document.getElementById('map');
     
     if (mainMapElement) {
-        mainMap = L.map('map').setView([48.35, -4.48], 11);
+        mainMap = L.map('map').setView([48.35, -4.48], 10); // Zoom 10 pour voir toute la rade
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(mainMap);
 
-        // Chargement initial
         loadEvents();
         setTimeout(function(){ mainMap.invalidateSize(); }, 500);
     }
@@ -48,9 +47,9 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-// --- CHARGEMENT DES DONNÉES ---
+// --- CHARGEMENT ---
 function loadEvents() {
-    // Nettoyage liste
+    // Nettoyage
     var listeContainer = document.querySelector('.features-list');
     if(listeContainer) listeContainer.innerHTML = "";
     
@@ -61,44 +60,51 @@ function loadEvents() {
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(mainMap);
     }
 
-    // --- CHEMIN MIS À JOUR : BDD/ ---
+    // Appel BDD
     fetch('BDD/data.json?t=' + new Date().getTime())
         .then(response => response.json())
         .then(data => {
-            data.forEach(event => {
-                afficherEvenement(event);
-            });
-            updateCompteur();
+            // --- CORRECTION ICI : On cible data.actions ---
+            if (data.actions) {
+                data.actions.forEach(event => {
+                    afficherEvenement(event);
+                });
+                updateCompteur();
+            } else {
+                console.error("Format JSON incorrect : Pas de clé 'actions' trouvée.");
+            }
         })
-        .catch(error => console.error("Erreur chargement (Vérifiez le dossier BDD):", error));
+        .catch(error => console.error("Erreur chargement:", error));
 }
 
 
-// --- AFFICHAGE (LECTURE DU JSON) ---
+// --- AFFICHAGE ---
 function afficherEvenement(event) {
-    // Lecture adaptée à ta structure JSON précise
+    // Chemins adaptés à ton JSON
     var lat = event.address.coordinates.lat;
     var lng = event.address.coordinates.lng;
-    
     var title = event.name;
-    var orga = event.creator_name || "Anonyme";
+    var orga = event.creator_name || "EcoBreizh";
     var type = event.type || "Action";
-    var level = event.difficulty || "Tous niveaux";
+    var level = event.difficulty || "Modérée";
     var nbParticipants = event.participants ? event.participants.length : 0;
 
     var dateObj = new Date(event.start_date);
-    var dateFormatted = dateObj.toLocaleDateString('fr-FR', {day: 'numeric', month: 'short'}) + " à " + dateObj.getHours() + "h";
+    var dateFormatted = dateObj.toLocaleDateString('fr-FR', {day: 'numeric', month: 'short', year: 'numeric'});
 
+    // Styles
     var iconClass = "bi-trash"; 
     var badgeClass = "bg-primary"; 
-    if (type.includes("Urgent")) { iconClass = "bi-exclamation-triangle"; badgeClass = "bg-warning text-dark"; } 
-    else if (type.includes("Sensibilisation")) { iconClass = "bi-info-circle"; badgeClass = "bg-info text-dark"; } 
-    else if (type.includes("Tri")) { iconClass = "bi-recycle"; badgeClass = "bg-success"; }
+    if (type.includes("Nettoyage")) { iconClass = "bi-trash"; badgeClass = "bg-primary"; }
+    else if (type.includes("Collecte")) { iconClass = "bi-recycle"; badgeClass = "bg-success"; }
+    else if (type.includes("Réunion")) { iconClass = "bi-people"; badgeClass = "bg-info text-dark"; }
+    else if (type.includes("Inspection")) { iconClass = "bi-search"; badgeClass = "bg-warning text-dark"; }
 
     // Marker
     var marker = L.marker([lat, lng]).addTo(mainMap);
     var popupContent = `
         <b>${title}</b><br>
+        📍 ${event.address.address}<br>
         📅 ${dateFormatted}<br>
         👥 ${nbParticipants} participants<br>
         <span class="badge ${badgeClass}">${type}</span>
@@ -122,7 +128,7 @@ function afficherEvenement(event) {
 }
 
 
-// --- AJOUT (ENVOI VERS forms/save_event.php) ---
+// --- AJOUT (ENVOI PHP) ---
 function ajouterPointSurCarte() {
     var nom = document.getElementById('inputName').value;
     var lat = document.getElementById('inputLat').value;
@@ -136,11 +142,11 @@ function ajouterPointSurCarte() {
         alert("Champs manquants !"); return;
     }
 
-    // Structure stricte pour respecter ton JSON
+    // Structure objet adaptée à ton JSON
     var newEvent = {
         name: nom,
         address: {
-            address: "Lieu indiqué sur carte",
+            address: "Lieu ajouté par utilisateur",
             coordinates: {
                 lat: parseFloat(lat),
                 lng: parseFloat(lng)
@@ -155,7 +161,6 @@ function ajouterPointSurCarte() {
         comments: []
     };
 
-    // --- CHEMIN MIS À JOUR : forms/ ---
     fetch('forms/save_event.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -163,7 +168,7 @@ function ajouterPointSurCarte() {
     })
     .then(response => response.json())
     .then(data => {
-        alert("Événement sauvegardé avec succès !");
+        alert("Événement ajouté !");
         loadEvents(); 
         document.getElementById('map-section').scrollIntoView({behavior: 'smooth'});
         
@@ -177,7 +182,7 @@ function ajouterPointSurCarte() {
     })
     .catch((error) => {
         console.error('Erreur:', error);
-        alert("Erreur lors de la communication avec le dossier 'forms/'. Vérifiez votre serveur.");
+        alert("Erreur serveur (vérifiez le PHP).");
     });
 }
 
