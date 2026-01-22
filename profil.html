@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Profil Utilisateur - RadeUP</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/css/main.css" rel="stylesheet">
+</head>
+
+<body class="index-page">
+
+  <header id="header" class="header d-flex align-items-center sticky-top">
+    <div class="container d-flex align-items-center justify-content-between">
+      <a href="index.html" class="logo d-flex align-items-center me-auto">
+        <h1 class="sitename">RadeUP</h1>
+      </a>
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="index.html">Accueil</a></li>
+          <li><a href="index.html#map-section">Spots</a></li>
+          <li><a href="#" class="active">Mon Profil</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <div id="loading-spinner" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="mt-2">Récupération de vos données...</p>
+    </div>
+
+    <div id="profile-display" style="display: none;">
+      <section class="profile-header">
+        <div class="container" data-aos="fade-up">
+          <img id="user-img" src="" alt="Photo de profil" class="profile-img mb-3">
+          <h1 id="user-fullname">Chargement...</h1>
+          <p id="user-role" class="badge bg-primary"></p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="row mb-5 text-center" data-aos="fade-up">
+            <h2>Mes Badges & Impact</h2>
+            <p>Retrouvez ici vos distinctions gagnées sur le terrain.</p>
+          </div>
+          <div class="row gy-4" id="badges-grid">
+            </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/js/profil.js"></script>
+
+</body>
+</html>
