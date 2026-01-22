@@ -1,32 +1,24 @@
-/* ==========================================
-   FICHIER : assets/js/temoignage.js
-   CORRIGÉ : Variables renommées + Structure HTML Nexa
-========================================== */
-
-// 1. On utilise des noms de variables UNIQUES pour éviter les conflits avec users.js
-let temoignageUsers = [];   
-let temoignageActions = []; 
+let usersData = [];
+let actionsData = [];
 
 /* =========================
    CHARGEMENT DES JSON
 ========================= */
 
-async function chargerDonneesTemoignages() {
-  try {
-    // Chargement des utilisateurs
-    const resUsers = await fetch("https://raw.githubusercontent.com/Les-Galaxy-lifers/RadeUp/main/BDD/users.json");
-    const dataUsers = await resUsers.json();
-    temoignageUsers = dataUsers.bénévoles;
+async function chargerUtilisateurs() {
+  const res = await fetch(
+    "https://raw.githubusercontent.com/Les-Galaxy-lifers/RadeUp/main/BDD/users.json"
+  );
+  const data = await res.json();
+  usersData = data.bénévoles;
+}
 
-    // Chargement des actions
-    const resActions = await fetch("https://raw.githubusercontent.com/Les-Galaxy-lifers/RadeUp/main/BDD/data.json");
-    const dataActions = await resActions.json();
-    temoignageActions = dataActions.actions;
-    
-    console.log("✅ Témoignages : Données chargées avec succès.");
-  } catch (error) {
-    console.error("❌ Erreur chargement témoignages :", error);
-  }
+async function chargerActions() {
+  const res = await fetch(
+    "https://raw.githubusercontent.com/Les-Galaxy-lifers/RadeUp/main/BDD/data.json"
+  );
+  const data = await res.json();
+  actionsData = data.actions;
 }
 
 /* =========================
@@ -35,52 +27,24 @@ async function chargerDonneesTemoignages() {
 
 function genererTemoignages() {
   const wrapper = document.getElementById("testimonials-wrapper");
-  if (!wrapper) return;
-  
   wrapper.innerHTML = "";
 
-  temoignageActions.forEach(action => {
-    // Si pas de commentaire, on passe
+  actionsData.forEach(action => {
     if (!action.comments) return;
     console.log(usersData);
     action.comments.forEach(comment => {
-      // On cherche l'utilisateur correspondant (ID Creator = ID User)
-      const user = temoignageUsers.find(u => u.id === action.creator);
-
-      // Gestion de l'image et du nom
-      let userImg = "assets/img/person/person-f-2.webp"; // Image par défaut locale
-      let userName = "Bénévole RadeUP";
-      let userRole = "Participant";
-
-      if (user) {
-          // Si l'utilisateur a une image valide, on la prend
-          if(user.image && user.image.startsWith('http')) {
-              userImg = user.image;
-          }
-          userName = user.firstName + " " + user.lastName;
-          // Petit bonus : Rôle basé sur le JSON
-          userRole = user.role === "admin" ? "Organisateur" : "Bénévole";
-      }
+      const user = usersData.find(u => u.id === action.creator);
 
       const slide = document.createElement("div");
       slide.className = "swiper-slide";
-      console.log(user.image);
-      // IMPORTANT : Utilisation de la structure HTML du template NEXA (testimonial-item)
 
       slide.innerHTML = `
-        <div class="testimonial-item">
-            <img src="${userImg}" class="testimonial-img" alt="${userName}" onerror="this.src='assets/img/testimonials/testimonials-1.jpg'">
-            <h3>${userName}</h3>
-            <h4>${userRole}</h4>
-            <div class="stars">
-                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-            </div>
+        <div class="testimonial-card">
+          <div class="testimonial-content">
             <p>
-                <i class="bi bi-quote quote-icon-left"></i>
-                <span>${comment}</span>
-                <i class="bi bi-quote quote-icon-right"></i>
+              <i class="bi bi-quote quote-icon"></i>
+              ${comment}
             </p>
-
           </div>
 
           <div class="testimonial-profile">
@@ -91,18 +55,11 @@ function genererTemoignages() {
               <i class="bi bi-star-fill"></i>
               <i class="bi bi-star"></i>
             </div>
-
-            <div class="profile-info">
-              <img src="${user?.image}"
-                   alt="Profile Image">
-              <div>
-                <h3>
-                  ${user ? `${user.firstName} ${user.lastName}` : "Anonyme"}
-                </h3>
-              </div>
-            </div>
-          </div>
-
+            <p>
+                <i class="bi bi-quote quote-icon-left"></i>
+                <span>${comment}</span>
+                <i class="bi bi-quote quote-icon-right"></i>
+            </p>
         </div>
       `;
 
@@ -112,28 +69,33 @@ function genererTemoignages() {
 }
 
 /* =========================
-   INITIALISATION ET SWIPER
+   INITIALISATION
 ========================= */
 
-// Fonction pour redémarrer Swiper proprement après injection du HTML
+async function initTestimonials() {
+  await Promise.all([
+    chargerUtilisateurs(),
+    chargerActions()
+  ]);
+
+  genererTemoignages();
+  reinitSwiper(); // 🔥 OBLIGATOIRE
+}
+
+document.addEventListener("DOMContentLoaded", initTestimonials);
 function reinitSwiper() {
   document.querySelectorAll('.init-swiper').forEach(el => {
+
+    // Détruire l'ancien Swiper
     if (el.swiper) {
-      el.swiper.destroy(true, true); // On détruit l'instance existante (vide)
+      el.swiper.destroy(true, true);
     }
-    
+
+    // Lire la config JSON du template
     const configScript = el.querySelector('.swiper-config');
     const config = JSON.parse(configScript.textContent);
-    
-    new Swiper(el, config); // On recrée avec les nouvelles slides
+
+    // Recréer Swiper
+    new Swiper(el, config);
   });
 }
-
-async function initTestimonials() {
-  await chargerDonneesTemoignages(); // On attend les données
-  genererTemoignages();              // On crée le HTML
-  reinitSwiper();                    // On lance le carrousel
-}
-
-// Lancement au chargement de la page
-document.addEventListener("DOMContentLoaded", initTestimonials);
