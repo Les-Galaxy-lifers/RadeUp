@@ -1,70 +1,93 @@
-// Variable globale pour stocker les utilisateurs
+// ==========================================
+// VARIABLES GLOBALES
+// ==========================================
 let usersData = null;
+let actionsData = null;
 
-// Configuration de la bibliothèque de badges
 const badgeLibrary = [
     { id: 'expert', name: "Nettoyeur Expert", desc: "3+ collectes réalisées", icon: "bi-star-fill", class: "b-expert" },
     { id: 'admin', name: "Gardien de la Rade", desc: "Rôle Administrateur", icon: "bi-shield-fill-check", class: "b-admin" },
     { id: 'ocean', name: "Ami de l'Océan", desc: "Au moins 1 mission", icon: "bi-droplet-half", class: "b-ocean" }
 ];
 
+// ==========================================
+// 1. FONCTION PRINCIPALE DE CHARGEMENT (FUSIONNÉE)
+// ==========================================
 /**
- * Charge les données depuis GitHub ou le LocalStorage
+ * Charge les Utilisateurs ET les Activités, puis lance l'affichage.
  */
-async function chargerEtAfficher() {
+async function initialiserDonnees() {
     try {
-        const localData = localStorage.getItem("usersData");
-        
-        if (localData) {
-            usersData = JSON.parse(localData);
-            console.log("✅ Données chargées depuis LocalStorage");
+        // --- A. Chargement des Utilisateurs ---
+        const localUsers = localStorage.getItem("usersData");
+        if (localUsers) {
+            usersData = JSON.parse(localUsers);
+            console.log("✅ (1/2) Utilisateurs chargés depuis LocalStorage");
         } else {
-            const res = await fetch("https://raw.githubusercontent.com/Les-Galaxy-lifers/RadeUp/main/BDD/users.json");
-            usersData = await res.json();
-            console.log("✅ Données chargées depuis GitHub");
+            const resUser = await fetch("https://raw.githubusercontent.com/Les-Galaxy-lifers/RadeUp/main/BDD/users.json");
+            usersData = await resUser.json();
+            console.log("✅ (1/2) Utilisateurs chargés depuis GitHub");
         }
 
+        // --- B. Chargement des Activités (data.json) ---
+        const localActions = localStorage.getItem("actionsData");
+        if (localActions) {
+            const parsedActions = JSON.parse(localActions);
+            actionsData = parsedActions.actions; // Extraction de la clé .actions
+            console.log("✅ (2/2) Activités chargées depuis LocalStorage");
+        } else {
+            const resAction = await fetch("https://raw.githubusercontent.com/Les-Galaxy-lifers/RadeUp/main/BDD/data.json");
+            const jsonAction = await resAction.json();
+            actionsData = jsonAction.actions; // Extraction de la clé .actions
+            console.log("✅ (2/2) Activités chargées depuis GitHub");
+        }
+
+        // --- C. Lancement de l'affichage ---
+        // Maintenant que tout est chargé, on peut afficher sans risque
         afficherProfil();
+        afficherActivites();
+
     } catch (err) {
-        console.error("❌ Erreur de chargement :", err);
+        console.error("❌ Erreur critique de chargement :", err);
         const main = document.getElementById('main-content');
-        if (main) main.innerHTML = `<div class="container py-5 text-center"><h3>Erreur de connexion aux données.</h3></div>`;
+        if (main) main.innerHTML = `<div class="container py-5 text-center"><h3>Erreur de connexion aux données.</h3><p class="text-muted">${err.message}</p></div>`;
     }
 }
 
-/**
- * Extrait l'ID de l'URL et injecte les données dans le HTML
- */
+// ==========================================
+// 2. FONCTIONS D'AFFICHAGE
+// ==========================================
+
 function afficherProfil() {
+    if (!usersData) return;
+
     const params = new URLSearchParams(window.location.search);
-    const userId = parseInt(params.get('id')) || usersData.bénévoles[Math.floor(Math.random() * usersData.bénévoles.length)].id; // ID aléatoire par défaut
+    
+    // LOGIQUE ALÉATOIRE : Si pas d'ID, on prend un user au hasard
+    const randomId = usersData.bénévoles[Math.floor(Math.random() * usersData.bénévoles.length)].id;
+    const userId = parseInt(params.get('id')) || randomId;
     
     const user = usersData.bénévoles.find(u => u.id === userId);
 
     if (!user) {
-        document.getElementById('main-content').innerHTML = `<div class="container py-5 text-center"><h3>Utilisateur non trouvé (ID: ${userId}).</h3></div>`;
+        document.getElementById('main-content').innerHTML = `<div class="container py-5 text-center"><h3>Utilisateur introuvable.</h3></div>`;
         return;
     }
 
-    // 1. Remplissage des textes de base
+    // Mise à jour du DOM
     document.getElementById('user-fullname').textContent = `${user.firstName} ${user.lastName}`;
     document.getElementById('user-role').textContent = user.role.toUpperCase();
-    
-    // 2. Gestion de l'image (par défaut si vide)
-    const imgElement = document.getElementById('user-img');
-    imgElement.src = user.image || "assets/img/person/default-user.webp";
+    document.getElementById('user-img').src = user.image || "assets/img/person/default-user.webp";
 
-    // 3. Génération dynamique de la grille de badges
+    // Génération des badges
     const grid = document.getElementById('badges-grid');
     if (grid) {
         grid.innerHTML = "";
         badgeLibrary.forEach(badge => {
             let isOwned = false;
-            
-            // Logique de déblocage des badges
-            if (badge.id === 'expert' && user.actions_id && user.actions_id.length >= 3) isOwned = true;
+            if (badge.id === 'expert' && user.actions_id.length >= 3) isOwned = true;
             if (badge.id === 'admin' && user.role === 'admin') isOwned = true;
-            if (badge.id === 'ocean' && user.actions_id && user.actions_id.length >= 1) isOwned = true;
+            if (badge.id === 'ocean' && user.actions_id.length >= 1) isOwned = true;
 
             grid.innerHTML += `
               <div class="col-lg-4 col-md-6" data-aos="zoom-in">
@@ -81,15 +104,77 @@ function afficherProfil() {
         });
     }
 
-    // 4. On cache le spinner et on affiche le profil
     document.getElementById('loading-spinner').style.display = 'none';
     document.getElementById('profile-display').style.display = 'block';
+    if (typeof AOS !== 'undefined') AOS.init();
+}
+
+function afficherActivites() {
+    // Plus besoin de setTimeout ou de vérification complexe, car cette fonction
+    // est appelée uniquement quand usersData ET actionsData sont prêts.
     
-    // Réinitialisation de AOS pour les nouveaux éléments injectés
-    if (typeof AOS !== 'undefined') {
-        AOS.init();
+    const params = new URLSearchParams(window.location.search);
+    // On réutilise la logique pour retrouver le même user que dans afficherProfil
+    // Note: Dans une vraie app, on stockerait l'ID user dans une variable globale pour éviter de recalculer le random
+    const userIdInUrl = parseInt(params.get('id'));
+    
+    // Si l'ID est dans l'URL, on le prend, sinon on doit retrouver l'utilisateur affiché 
+    // (Astuce : ici on filtre par rapport au nom affiché ou on refait la recherche, 
+    // mais pour simplifier, si c'est aléatoire, le tableau risque de ne pas correspondre au profil 
+    // si on ne stocke pas l'ID. Pour ce code, on suppose que l'URL a l'ID ou on prend le premier pour éviter le crash).
+    
+    // Amélioration : Récupérer l'ID directement depuis usersData si on a stocké "currentUser"
+    // Pour ton exercice, on va chercher l'ID en fonction du nom affiché dans le DOM ou on prend le user de l'URL
+    
+    let user = null;
+    if (userIdInUrl) {
+        user = usersData.bénévoles.find(u => u.id === userIdInUrl);
+    } else {
+        // Si c'est aléatoire, on essaye de retrouver le user affiché par son nom
+        const nameDisplayed = document.getElementById('user-fullname').textContent;
+        user = usersData.bénévoles.find(u => `${u.firstName} ${u.lastName}` === nameDisplayed);
+    }
+
+    if (!user) return; // Sécurité
+
+    const tbody = document.getElementById('actions-list');
+    const noActionsMsg = document.getElementById('no-actions-message');
+    tbody.innerHTML = ""; 
+
+    // Filtrage : On compare user.actions_id (tableau d'entiers) avec action.id
+    const mesActions = actionsData.filter(action => user.actions_id.includes(action.id));
+
+    if (mesActions.length === 0) {
+        noActionsMsg.style.display = "block";
+        if(document.querySelector('.table-responsive')) 
+            document.querySelector('.table-responsive').style.display = "none";
+    } else {
+        noActionsMsg.style.display = "none";
+        if(document.querySelector('.table-responsive')) 
+            document.querySelector('.table-responsive').style.display = "block";
+
+        mesActions.forEach(action => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${action.start_date}</td>
+                <td class="fw-bold">${action.name}</td>
+                <td>${action.address.address}</td>
+                <td><span class="badge bg-primary">${action.type}</span></td>
+                <td><span class="badge ${getDifficultyColor(action.difficulty)}">${action.difficulty}</span></td>
+            `;
+            tbody.appendChild(tr);
+        });
     }
 }
 
-// Lancement au chargement de la page
-document.addEventListener("DOMContentLoaded", chargerEtAfficher);
+function getDifficultyColor(diff) {
+    if (diff === 'Facile') return 'bg-success';
+    if (diff === 'Modérée') return 'bg-warning text-dark';
+    if (diff === 'Difficile') return 'bg-danger';
+    return 'bg-secondary';
+}
+
+// ==========================================
+// 3. LANCEMENT UNIQUE
+// ==========================================
+document.addEventListener("DOMContentLoaded", initialiserDonnees);

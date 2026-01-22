@@ -56,6 +56,41 @@
         </div>
       </section>
     </div>
+
+    <section id="actions-section" class="section light-background">
+  <div class="container">
+    <div class="row mb-4 text-center" data-aos="fade-up">
+      <h2>Mon Historique d'Actions</h2>
+      <p>Retrouvez toutes les collectes et événements auxquels vous avez participé.</p>
+    </div>
+    
+    <div class="row" data-aos="fade-up" data-aos-delay="100">
+      <div class="col-12">
+        <div class="card border-0 shadow-sm p-4">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>Date</th>
+                  <th>Nom de l'action</th>
+                  <th>Lieu</th>
+                  <th>Type</th>
+                  <th>Difficulté</th>
+                </tr>
+              </thead>
+              <tbody id="actions-list">
+                </tbody>
+            </table>
+          </div>
+          <div id="no-actions-message" class="text-center py-4" style="display: none;">
+            <i class="bi bi-info-circle fs-2 text-muted"></i>
+            <p class="mt-2 text-muted">Vous n'avez pas encore participé à d'actions. <br> <a href="index.html#map-section">Trouvez votre premier spot !</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
   </main>
 
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
