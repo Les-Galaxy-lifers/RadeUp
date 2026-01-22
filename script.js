@@ -1,5 +1,6 @@
 /* * FICHIER : script.js
- * Compatible avec le format JSON : { "actions": [ ... ] }
+ * SOLUTION HYBRIDE : JSON (Fixe) + LOCALSTORAGE (Dynamique)
+ * Compatible GitHub Pages
  */
 
 var mainMap = null;
@@ -12,14 +13,17 @@ document.addEventListener("DOMContentLoaded", function() {
     var mainMapElement = document.getElementById('map');
     
     if (mainMapElement) {
-        mainMap = L.map('map').setView([48.35, -4.48], 10); // Zoom 10 pour voir toute la rade
+        // Centrage sur la Rade de Brest
+        mainMap = L.map('map').setView([48.35, -4.48], 11);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(mainMap);
 
+        // Chargement des données (JSON + LocalStorage)
         loadEvents();
+        
         setTimeout(function(){ mainMap.invalidateSize(); }, 500);
     }
 
-    // --- 2. INITIALISATION MINI-MAP ---
+    // --- 2. INITIALISATION MINI-MAP (Formulaire) ---
     var miniMapElement = document.getElementById('mini-map');
     if (miniMapElement) {
         miniMap = L.map('mini-map').setView([48.35, -4.48], 10);
@@ -47,9 +51,9 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-// --- CHARGEMENT ---
+// --- FONCTION CŒUR : CHARGEMENT HYBRIDE ---
 function loadEvents() {
-    // Nettoyage
+    // 1. Nettoyage de l'interface
     var listeContainer = document.querySelector('.features-list');
     if(listeContainer) listeContainer.innerHTML = "";
     
@@ -60,47 +64,69 @@ function loadEvents() {
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(mainMap);
     }
 
-    // Appel BDD
-    fetch('BDD/data.json?t=' + new Date().getTime())
+    // 2. Charger les données du fichier JSON (Le "Socle")
+    fetch('BDD/data.json')
         .then(response => response.json())
         .then(data => {
-            // --- CORRECTION ICI : On cible data.actions ---
             if (data.actions) {
                 data.actions.forEach(event => {
                     afficherEvenement(event);
                 });
-                updateCompteur();
-            } else {
-                console.error("Format JSON incorrect : Pas de clé 'actions' trouvée.");
             }
+            
+            // 3. Charger les données du LocalStorage (Les "Ajouts")
+            chargerDonneesLocales();
+            
+            updateCompteur();
         })
-        .catch(error => console.error("Erreur chargement:", error));
+        .catch(error => {
+            console.error("Erreur JSON (ou fichier absent):", error);
+            // Si le JSON plante, on charge quand même le local
+            chargerDonneesLocales();
+            updateCompteur();
+        });
+}
+
+// Fonction pour lire la mémoire du navigateur
+function chargerDonneesLocales() {
+    var saved = localStorage.getItem('myHybridEvents');
+    if (saved) {
+        var events = JSON.parse(saved);
+        events.forEach(event => afficherEvenement(event));
+    }
 }
 
 
-// --- AFFICHAGE ---
+// --- AFFICHAGE UNIFIÉ ---
 function afficherEvenement(event) {
-    // Chemins adaptés à ton JSON
+    // Protection contre les données incomplètes
+    if (!event.address || !event.address.coordinates) return;
+
     var lat = event.address.coordinates.lat;
     var lng = event.address.coordinates.lng;
     var title = event.name;
-    var orga = event.creator_name || "EcoBreizh";
+    var orga = event.creator_name || "Bénévole";
     var type = event.type || "Action";
-    var level = event.difficulty || "Modérée";
+    var level = event.difficulty || "Tous niveaux";
     var nbParticipants = event.participants ? event.participants.length : 0;
 
-    var dateObj = new Date(event.start_date);
-    var dateFormatted = dateObj.toLocaleDateString('fr-FR', {day: 'numeric', month: 'short', year: 'numeric'});
+    // Date et Heure
+    var dateFormatted = "Date à définir";
+    if(event.start_date) {
+        var dateObj = new Date(event.start_date);
+        dateFormatted = dateObj.toLocaleDateString('fr-FR', {day: 'numeric', month: 'short'}) + 
+                        " à " + 
+                        dateObj.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
+    }
 
-    // Styles
+    // Couleurs et Icônes
     var iconClass = "bi-trash"; 
     var badgeClass = "bg-primary"; 
-    if (type.includes("Nettoyage")) { iconClass = "bi-trash"; badgeClass = "bg-primary"; }
-    else if (type.includes("Collecte")) { iconClass = "bi-recycle"; badgeClass = "bg-success"; }
-    else if (type.includes("Réunion")) { iconClass = "bi-people"; badgeClass = "bg-info text-dark"; }
-    else if (type.includes("Inspection")) { iconClass = "bi-search"; badgeClass = "bg-warning text-dark"; }
+    if (type.includes("Urgent")) { iconClass = "bi-exclamation-triangle"; badgeClass = "bg-warning text-dark"; } 
+    else if (type.includes("Sensibilisation")) { iconClass = "bi-info-circle"; badgeClass = "bg-info text-dark"; } 
+    else if (type.includes("Tri")) { iconClass = "bi-recycle"; badgeClass = "bg-success"; }
 
-    // Marker
+    // A. Marqueur sur la carte
     var marker = L.marker([lat, lng]).addTo(mainMap);
     var popupContent = `
         <b>${title}</b><br>
@@ -111,7 +137,7 @@ function afficherEvenement(event) {
     `;
     marker.bindPopup(popupContent);
 
-    // Liste
+    // B. Élément dans la liste
     var htmlItem = `
         <div class="feature-item cursor-pointer" onclick="focusMap(${lat}, ${lng}, '${title.replace(/'/g, "\\'")}')">
           <div class="icon-box"><i class="bi ${iconClass}"></i></div>
@@ -128,8 +154,9 @@ function afficherEvenement(event) {
 }
 
 
-// --- AJOUT (ENVOI PHP) ---
+// --- AJOUT D'UN POINT (SAUVEGARDE LOCALE) ---
 function ajouterPointSurCarte() {
+    // 1. Récupération du formulaire
     var nom = document.getElementById('inputName').value;
     var lat = document.getElementById('inputLat').value;
     var lng = document.getElementById('inputLng').value;
@@ -139,14 +166,14 @@ function ajouterPointSurCarte() {
     var orga = document.getElementById('inputOrg').value;
 
     if (nom === "" || lat === "" || lng === "" || dateValue === "") {
-        alert("Champs manquants !"); return;
+        alert("Merci de remplir tous les champs !"); return;
     }
 
-    // Structure objet adaptée à ton JSON
+    // 2. Création de l'objet (Structure IDENTIQUE au JSON)
     var newEvent = {
         name: nom,
         address: {
-            address: "Lieu ajouté par utilisateur",
+            address: "Lieu ajouté (Local)",
             coordinates: {
                 lat: parseFloat(lat),
                 lng: parseFloat(lng)
@@ -154,36 +181,31 @@ function ajouterPointSurCarte() {
         },
         start_date: dateValue,
         participants: [],
-        creator: 99,
         creator_name: orga,
         type: type,
-        difficulty: niveau,
-        comments: []
+        difficulty: niveau
     };
 
-    fetch('forms/save_event.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newEvent)
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert("Événement ajouté !");
-        loadEvents(); 
-        document.getElementById('map-section').scrollIntoView({behavior: 'smooth'});
-        
-        // Reset
-        document.getElementById('inputName').value = "";
-        document.getElementById('inputLat').value = "";
-        document.getElementById('inputLng').value = "";
-        document.getElementById('inputTime').value = "";
-        document.getElementById('inputOrg').value = "";
-        if (selectionMarker) { miniMap.removeLayer(selectionMarker); selectionMarker = null; }
-    })
-    .catch((error) => {
-        console.error('Erreur:', error);
-        alert("Erreur serveur (vérifiez le PHP).");
-    });
+    // 3. Sauvegarde dans le LocalStorage (La magie)
+    var existingEvents = localStorage.getItem('myHybridEvents');
+    var eventsArray = existingEvents ? JSON.parse(existingEvents) : [];
+    
+    eventsArray.push(newEvent);
+    
+    localStorage.setItem('myHybridEvents', JSON.stringify(eventsArray));
+
+    // 4. Feedback
+    alert("✅ Action ajoutée avec succès ! (Sauvegardée localement)");
+    loadEvents(); // On recharge tout pour voir le nouveau point
+    document.getElementById('map-section').scrollIntoView({behavior: 'smooth'});
+
+    // 5. Reset
+    document.getElementById('inputName').value = "";
+    document.getElementById('inputLat').value = "";
+    document.getElementById('inputLng').value = "";
+    document.getElementById('inputTime').value = "";
+    document.getElementById('inputOrg').value = "";
+    if (selectionMarker) { miniMap.removeLayer(selectionMarker); selectionMarker = null; }
 }
 
 
@@ -191,7 +213,13 @@ function ajouterPointSurCarte() {
 function updateCompteur() {
     var count = document.querySelectorAll('.features-list .feature-item').length;
     var display = document.querySelector('.experience-box .years');
-    if (display) display.innerText = count;
+    if (display) {
+        display.innerText = count;
+        // Animation pop
+        display.style.transition = "transform 0.2s";
+        display.style.transform = "scale(1.3)";
+        setTimeout(() => { display.style.transform = "scale(1)"; }, 200);
+    }
 }
 
 function focusMap(lat, lng, title) {
