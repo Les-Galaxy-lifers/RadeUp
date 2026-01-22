@@ -1,30 +1,25 @@
 /* * FICHIER : script.js
- * Ce fichier gère la carte interactive (Leaflet), le clic pour récupérer les coordonnées,
- * et le formulaire d'ajout complet.
+ * Gère la Grande Carte, la Mini-Map de sélection et l'ajout dynamique dans la liste.
  */
 
 // Variables globales
-var map = null;
-var selectionMarker = null; // Pour stocker le marqueur rouge de sélection
+var mainMap = null; // Grande carte du haut
+var miniMap = null; // Petite carte du formulaire
+var selectionMarker = null; // Marqueur rouge sur la mini-map
 
-// On attend que la page soit totalement chargée pour initialiser la carte
 document.addEventListener("DOMContentLoaded", function() {
     
-    // --- PARTIE 1 : INITIALISATION DE LA CARTE ---
+    // --- 1. INITIALISATION DE LA CARTE PRINCIPALE (HAUT) ---
+    var mainMapElement = document.getElementById('map');
     
-    // Sécurité : on vérifie si la div 'map' existe avant de lancer le code
-    var mapElement = document.getElementById('map');
-    
-    if (mapElement) {
-        // 1. Création de la carte centrée sur la Rade de Brest
-        map = L.map('map').setView([48.35, -4.48], 11);
+    if (mainMapElement) {
+        mainMap = L.map('map').setView([48.35, -4.48], 11);
 
-        // 2. Ajout du fond de carte (OpenStreetMap)
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
+            attribution: '&copy; OpenStreetMap'
+        }).addTo(mainMap);
 
-        // 3. Liste des points initiaux (Les événements déjà prévus)
+        // Points initiaux
         var locations = [
             { lat: 48.3908, lng: -4.4357, title: "Plage du Moulin Blanc" },
             { lat: 48.3394, lng: -4.6122, title: "Pointe du Petit Minou" },
@@ -33,41 +28,45 @@ document.addEventListener("DOMContentLoaded", function() {
             { lat: 48.3585, lng: -4.5705, title: "Technopôle Brest-Iroise" }
         ];
 
-        // Boucle pour placer les marqueurs initiaux (Bleus par défaut)
         locations.forEach(function(loc) {
-            L.marker([loc.lat, loc.lng])
-             .addTo(map)
+            L.marker([loc.lat, loc.lng]).addTo(mainMap)
              .bindPopup("<b>" + loc.title + "</b><br>Rendez-vous ici !");
         });
-
-        // --- PARTIE 2 : LOGIQUE DU CLIC SUR LA CARTE (SÉLECTION) ---
         
-        map.on('click', function(e) {
-            // A. On récupère les coordonnées du clic (4 chiffres après la virgule)
+        // Fix affichage
+        setTimeout(function(){ mainMap.invalidateSize(); }, 500);
+    }
+
+    // --- 2. INITIALISATION DE LA MINI-CARTE (FORMULAIRE) ---
+    var miniMapElement = document.getElementById('mini-map');
+
+    if (miniMapElement) {
+        miniMap = L.map('mini-map').setView([48.35, -4.48], 10);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap'
+        }).addTo(miniMap);
+
+        // -- GESTION DU CLIC SUR LA MINI-CARTE --
+        miniMap.on('click', function(e) {
             var lat = e.latlng.lat.toFixed(4);
             var lng = e.latlng.lng.toFixed(4);
 
-            // B. On remplit les champs du formulaire (étape 02)
+            // Remplissage des inputs readonly
             var latInput = document.getElementById('inputLat');
             var lngInput = document.getElementById('inputLng');
             
             if (latInput && lngInput) {
                 latInput.value = lat;
                 lngInput.value = lng;
-                
-                // On affiche le petit message de succès vert si il existe
-                var feedback = document.getElementById('location-feedback');
-                if(feedback) feedback.style.display = 'block';
+                document.getElementById('location-feedback').style.display = 'block';
             }
 
-            // C. Gestion du marqueur visuel ROUGE (Temporaire)
-            
-            // Si un marqueur de sélection existe déjà, on l'enlève pour n'en avoir qu'un seul
+            // Marqueur Rouge visuel
             if (selectionMarker) {
-                map.removeLayer(selectionMarker);
+                miniMap.removeLayer(selectionMarker);
             }
 
-            // Définition de l'icône rouge pour bien la distinguer
             var redIcon = new L.Icon({
                 iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/markers-default/red.png',
                 shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -77,94 +76,109 @@ document.addEventListener("DOMContentLoaded", function() {
                 shadowSize: [41, 41]
             });
 
-            // On ajoute le nouveau marqueur rouge
-            selectionMarker = L.marker([lat, lng], {icon: redIcon}).addTo(map);
-            selectionMarker.bindPopup("<b>Nouveau Spot ici ?</b><br>Coordonnées copiées !").openPopup();
+            selectionMarker = L.marker([lat, lng], {icon: redIcon}).addTo(miniMap);
+            selectionMarker.bindPopup("Position sélectionnée").openPopup();
         });
-
-        // Petit fix pour s'assurer que la carte s'affiche correctement
-        setTimeout(function(){ map.invalidateSize(); }, 500);
+        
+        setTimeout(function(){ miniMap.invalidateSize(); }, 1000);
     }
 });
 
 
-// --- PARTIE 3 : LES FONCTIONS GLOBALES ---
+// --- 3. FONCTIONS GLOBALES ---
 
-/**
- * Fonction appelée quand on clique sur une annonce dans la liste de droite
- */
+// Fonction de zoom sur la carte (depuis la liste)
 function focusMap(lat, lng, title) {
-    if (map) {
-        map.flyTo([lat, lng], 14, {
-            animate: true,
-            duration: 1.5
-        });
-        
-        L.popup()
-          .setLatLng([lat, lng])
-          .setContent("<b>" + title + "</b>")
-          .openOn(map);
-          
+    if (mainMap) {
+        mainMap.flyTo([lat, lng], 14, { animate: true, duration: 1.5 });
+        L.popup().setLatLng([lat, lng]).setContent("<b>" + title + "</b>").openOn(mainMap);
         document.getElementById('map-section').scrollIntoView({behavior: 'smooth', block: 'center'});
     }
 }
 
-/**
- * Fonction appelée par le formulaire "Proposer un Spot" (Étape 4)
- * Ajoute un nouveau point BLEU définitif avec Type et Niveau
- */
+// Fonction PRINCIPALE : Ajoute le point et crée l'élément dans la liste
 function ajouterPointSurCarte() {
-    // 1. Récupération des valeurs du formulaire
+    // 1. Récupération des données
     var nom = document.getElementById('inputName').value;
-    var lat = parseFloat(document.getElementById('inputLat').value);
-    var lng = parseFloat(document.getElementById('inputLng').value);
-    
-    // On récupère les listes déroulantes
-    var typeSelect = document.getElementById('inputType');
-    var type = typeSelect ? typeSelect.value : "Non spécifié";
+    var lat = document.getElementById('inputLat').value;
+    var lng = document.getElementById('inputLng').value;
+    var type = document.getElementById('inputType').value;
+    var niveau = document.getElementById('inputLevel').value;
+    var dateValue = document.getElementById('inputTime').value; // format: 2025-01-22T14:30
+    var orga = document.getElementById('inputOrg').value;
 
-    var levelSelect = document.getElementById('inputLevel');
-    var niveau = levelSelect ? levelSelect.value : "Non spécifié";
-
-    // 2. Vérification des erreurs
-    if (nom === "" || isNaN(lat) || isNaN(lng)) {
-        alert("Attention : Le nom ou les coordonnées sont manquants ! Utilisez la carte pour cliquer un point.");
+    // 2. Validation
+    if (nom === "" || lat === "" || lng === "" || dateValue === "" || orga === "") {
+        alert("Merci de remplir tous les champs (y compris Date et Organisateur) !");
         return;
     }
 
-    if (!map) {
-        alert("Erreur : La carte n'est pas chargée.");
-        return;
-    }
+    if (!mainMap) return;
 
-    // 3. Ajout du marqueur définitif (Bleu par défaut)
-    var newMarker = L.marker([lat, lng]).addTo(map);
+    // 3. Formatage pour l'affichage (Date et Icônes)
     
-    // On nettoie le marqueur rouge de sélection s'il est là
-    if (selectionMarker) {
-        map.removeLayer(selectionMarker);
-        selectionMarker = null;
+    // Date : "2025-01-22T14:30" -> "22/01 à 14:30" (ou format simple)
+    var dateObj = new Date(dateValue);
+    var dateFormatted = dateObj.toLocaleDateString('fr-FR', {day: 'numeric', month: 'short'}) + ", " + dateObj.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
+
+    // Choix du style selon le type (Couleurs et Icônes)
+    var iconClass = "bi-trash"; 
+    var badgeClass = "bg-primary"; 
+
+    if (type.includes("Urgent")) {
+        iconClass = "bi-exclamation-triangle";
+        badgeClass = "bg-warning text-dark";
+    } else if (type.includes("Sensibilisation")) {
+        iconClass = "bi-info-circle";
+        badgeClass = "bg-info text-dark";
+    } else if (type.includes("Tri")) {
+        iconClass = "bi-recycle";
+        badgeClass = "bg-success";
+    } else if (type.includes("Afterwork")) {
+        iconClass = "bi-cup-straw";
+        badgeClass = "bg-secondary";
     }
 
-    // 4. Contenu de la popup avec Type et Niveau
-    var popupContent = `
-        <b>${nom}</b><br>
-        <span style="color:#0d6efd">Type: ${type}</span><br>
-        <span style="color:#6c757d">Niveau: ${niveau}</span><br>
-        <i>✅ Ajouté à l'instant</i>
+    // 4. Ajout sur la CARTE PRINCIPALE
+    var newMarker = L.marker([lat, lng]).addTo(mainMap);
+    var popupMapContent = `<b>${nom}</b><br>📅 ${dateFormatted}<br><span class="badge ${badgeClass}">${type}</span>`;
+    newMarker.bindPopup(popupMapContent).openPopup();
+    mainMap.flyTo([lat, lng], 14);
+
+    // 5. CRÉATION ET INJECTION DANS LA LISTE (HTML dynamique)
+    
+    // On construit le bloc HTML exactement comme demandé
+    var htmlItem = `
+        <div class="feature-item cursor-pointer" onclick="focusMap(${lat}, ${lng}, '${nom.replace(/'/g, "\\'")}')">
+          <div class="icon-box"><i class="bi ${iconClass}"></i></div>
+          <div class="text">
+            <h4>${nom}</h4>
+            <p><strong>${dateFormatted}</strong> - Org: ${orga}<br>
+            <span class="badge ${badgeClass}">${type}</span> <small>${niveau}</small></p>
+          </div>
+        </div>
     `;
-    
-    newMarker.bindPopup(popupContent).openPopup();
 
-    // 5. Zoom sur le nouveau point
-    map.flyTo([lat, lng], 14);
+    // On l'ajoute tout en haut de la liste
+    var listeContainer = document.querySelector('.features-list');
+    if(listeContainer) {
+        listeContainer.insertAdjacentHTML('afterbegin', htmlItem);
+    }
 
-    // 6. Feedback utilisateur
-    alert("Super ! Le spot '" + nom + "' a été ajouté à la carte.");
-
-    // 7. On remonte vers la carte pour voir le résultat
+    // 6. Feedback et Reset
+    alert("C'est validé ! Votre action est en ligne.");
     document.getElementById('map-section').scrollIntoView({behavior: 'smooth'});
 
-    // 8. Nettoyage du champ Nom (on garde les coords au cas où)
+    // Vider le formulaire pour la suite
     document.getElementById('inputName').value = "";
+    document.getElementById('inputLat').value = "";
+    document.getElementById('inputLng').value = "";
+    document.getElementById('inputTime').value = "";
+    document.getElementById('inputOrg').value = "";
+    
+    // On enlève le marqueur rouge de la mini-map
+    if (selectionMarker) {
+        miniMap.removeLayer(selectionMarker);
+        selectionMarker = null;
+    }
 }

@@ -297,11 +297,9 @@
                   </div>
                   <div class="step-content">
                     <h3>Localisation</h3>
-                    <p class="small text-muted">Cliquez sur le bouton pour placer le point sur la carte.</p>
+                    <p class="small text-muted">Cliquez directement sur la carte ci-dessous pour placer le point.</p>
                     
-                    <a href="#map-section" class="btn btn-outline-primary btn-sm w-100 mb-3">
-                      <i class="bi bi-crosshair"></i> Choisir sur la carte
-                    </a>
+                    <div id="mini-map" style="width: 100%; height: 250px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ddd;"></div>
 
                     <div class="row g-2">
                       <div class="col-6">
@@ -312,7 +310,7 @@
                       </div>
                     </div>
                     <small id="location-feedback" class="text-success" style="font-size: 0.8em; display:none;">
-                      <i class="bi bi-check-circle"></i> Position enregistrée !
+                      <i class="bi bi-check-circle"></i> Coordonnées récupérées !
                     </small>
                   </div>
                 </div>
@@ -328,6 +326,16 @@
                   </div>
                   <div class="step-content">
                     <h3>Détails de l'action</h3>
+                    
+                    <div class="mb-3">
+                      <label for="inputTime" class="form-label text-muted small">Quand ?</label>
+                      <input type="datetime-local" class="form-control" id="inputTime">
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="inputOrg" class="form-label text-muted small">Organisateur</label>
+                      <input type="text" class="form-control" id="inputOrg" placeholder="Ex: BDE, Asso, Mairie...">
+                    </div>
                     
                     <div class="mb-3">
                       <label for="inputType" class="form-label text-muted small">Type d'action</label>
@@ -364,7 +372,7 @@
                   </div>
                   <div class="step-content">
                     <h3>Lancer l'alerte</h3>
-                    <p>Une fois validé, le point apparaîtra instantanément sur la carte.</p>
+                    <p>Une fois validé, le point apparaîtra instantanément sur la carte et dans la liste.</p>
                     <button type="button" class="btn btn-primary w-100 mt-2" onclick="ajouterPointSurCarte()">
                       Ajouter le Spot <i class="bi bi-arrow-right"></i>
                     </button>
