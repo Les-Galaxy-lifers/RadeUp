@@ -31,13 +31,11 @@ function genererTemoignages() {
 
   actionsData.forEach(action => {
     if (!action.comments) return;
-
     action.comments.forEach(comment => {
-      const user = usersData.find(u => u.id === action.creator);
+      const user = usersData.find(u => u.id === action.id);
 
       const slide = document.createElement("div");
       slide.className = "swiper-slide";
-
       slide.innerHTML = `
         <div class="testimonial-card">
           <div class="testimonial-content">
